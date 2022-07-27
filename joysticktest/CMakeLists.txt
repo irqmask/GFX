@@ -29,8 +29,6 @@ target_link_libraries(joysticktest libgame ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRAR
 
 # post-build step
 if(WIN32)
-    add_custom_command(TARGET joysticktest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_DLLS} ${EXECUTABLE_OUTPUT_PATH}/Debug)
-    add_custom_command(TARGET joysticktest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_DLLS} ${EXECUTABLE_OUTPUT_PATH}/Release)
-    add_custom_command(TARGET joysticktest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_IMAGE_DLLS} ${EXECUTABLE_OUTPUT_PATH}/Debug)
-    add_custom_command(TARGET joysticktest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_IMAGE_DLLS} ${EXECUTABLE_OUTPUT_PATH}/Release)
+    add_custom_command(TARGET joysticktest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_DLLS} ${EXECUTABLE_OUTPUT_PATH})
+    add_custom_command(TARGET joysticktest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_IMAGE_DLLS} ${EXECUTABLE_OUTPUT_PATH})
 endif(WIN32)

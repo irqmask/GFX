@@ -24,14 +24,10 @@ add_executable(tilemap ${tilemap_SRC})
 target_link_libraries(tilemap libgame ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 
 # post-build step
-add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/font.png ${EXECUTABLE_OUTPUT_PATH}/Debug)
-add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/font.png ${EXECUTABLE_OUTPUT_PATH}/Release)
-add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/tiles_30x30_test.png ${EXECUTABLE_OUTPUT_PATH}/Debug)
-add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/tiles_30x30_test.png ${EXECUTABLE_OUTPUT_PATH}/Release)
+add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/font.png ${EXECUTABLE_OUTPUT_PATH})
+add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/tiles_30x30_test.png ${EXECUTABLE_OUTPUT_PATH})
 
 if(WIN32)
-    add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_DLLS} ${EXECUTABLE_OUTPUT_PATH}/Debug)
-    add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_DLLS} ${EXECUTABLE_OUTPUT_PATH}/Release)
-    add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_IMAGE_DLLS} ${EXECUTABLE_OUTPUT_PATH}/Debug)
-    add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_IMAGE_DLLS} ${EXECUTABLE_OUTPUT_PATH}/Release)
+    add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_DLLS} ${EXECUTABLE_OUTPUT_PATH})
+    add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_IMAGE_DLLS} ${EXECUTABLE_OUTPUT_PATH})
 endif(WIN32)
