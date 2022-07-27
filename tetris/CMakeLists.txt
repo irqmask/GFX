@@ -28,8 +28,8 @@ add_executable(tetris ${tetris_SRC})
 target_link_libraries(tetris libgame ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 
 # post-build step
-add_custom_command(TARGET tetris POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/spritexb-4248.png ${EXECUTABLE_OUTPUT_PATH}/Debug)
-add_custom_command(TARGET tetris POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/spritexb-4248.png ${EXECUTABLE_OUTPUT_PATH}/Release)
+add_custom_command(TARGET tetris POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/assets/background.png ${EXECUTABLE_OUTPUT_PATH}/Debug)
+add_custom_command(TARGET tetris POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/assets/background.png ${EXECUTABLE_OUTPUT_PATH}/Release)
 
 if(WIN32)
     add_custom_command(TARGET tetris POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_DLLS} ${EXECUTABLE_OUTPUT_PATH}/Debug)
