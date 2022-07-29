@@ -21,8 +21,7 @@ MyScene::MyScene(std::shared_ptr<Engine> engine)
     , my(0)
 {
     std::cout << __FUNCTION__ << std::endl;
-    //tilemap = std::shared_ptr<TileMap>(new TileMap(std::string("tiles_30x30_test.png"), tileWidth, tileHeight));
-    tilemap = std::shared_ptr<TileMap>(new TileMap(std::string("/home/christian/Dokumente/Kinder/Frederik/zitronensuche.png"), tileWidth, tileHeight));
+    tilemap = std::shared_ptr<TileMap>(new TileMap(std::string("tiles_30x30_test.png"), tileWidth, tileHeight));
     tilemap->load(level0, levelWidth, levelHeight);
     Rect<int32_t> r(0, 0, 640, 480);
     tilemap->setDrawRect(r);
@@ -55,8 +54,8 @@ void MyScene::onEvent(SDL_Event& event)
 
     // convert to map coordinates
     Vec2d<int32_t> mousepos;
-    mousepos.x = engine->mouseX / tileWidth;
-    mousepos.y = engine->mouseY / tileHeight;
+    mousepos.x = static_cast<int32_t>(engine->mouseX / static_cast<float>(tileWidth) + 0.5f);
+    mousepos.y = static_cast<int32_t>(engine->mouseY / static_cast<float>(tileHeight) + 0.5f);
 
     if (event.type == SDL_MOUSEBUTTONDOWN) {
         int tt = tilemap->getTile(mousepos);

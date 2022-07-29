@@ -17,7 +17,7 @@ MyScene::MyScene(std::shared_ptr<Engine> engine)
     , score(0)
     , highscore(0)
 {
-    background = std::make_shared<ImageData>("../assets/background.png");
+    background = std::make_shared<ImageData>("background.png");
     font = std::shared_ptr<BitmapFont>(new BitmapFont(std::string("font.png"), 9, 16, 20, 128));
 
     for (int32_t y = 0; y < FIELD_HEIGHT; y++) {
@@ -216,7 +216,7 @@ int32_t MyScene::checkRows()
     }
     // found full row
     removingRows = (fullRows.size() > 0);
-    return fullRows.size();
+    return static_cast<int32_t>(fullRows.size());
 }
 
 
