@@ -1,5 +1,6 @@
 #define SDL_MAIN_HANDLED
 
+#include <ctime>
 #include <memory>
 
 #include "Engine.h"

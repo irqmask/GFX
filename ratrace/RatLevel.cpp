@@ -33,12 +33,11 @@ RatLevel::RatLevel(std::shared_ptr<Engine> engine)
     Rect<int32_t> mapviewrect;
     mapviewrect.pos.x = 5;
     mapviewrect.pos.y = 5;
-    mapviewrect.size.x = engine->getWindowWidth() * 0.75;
-    mapviewrect.size.y = engine->getWindowHeight() * 0.9;
+    mapviewrect.size.x = static_cast<int32_t>(static_cast<float>(engine->getWindowWidth()) * 0.75f);
+    mapviewrect.size.y = static_cast<int32_t>(static_cast<float>(engine->getWindowHeight()) * 0.9f);
     tilemap->setDrawRect(mapviewrect);
 
     mouse = std::make_shared<Mouse>(engine, tilemap);
-
 }
 
 

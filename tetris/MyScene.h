@@ -38,8 +38,8 @@ public:
 
     static constexpr int32_t START_X = FIELD_WIDTH / 2 - 1;
     static constexpr int32_t START_Y = -5;
-    static constexpr float AUTO_DROP_TIME = 0.4;
-    static constexpr float MANUAL_DROP_TIME = 0.05;
+    static constexpr float AUTO_DROP_TIME = 0.4f;
+    static constexpr float MANUAL_DROP_TIME = 0.05f;
     static constexpr float REMOVE_TIME = 0.2f;
 
     static constexpr int32_t SCORE_SIMPLE_MULTIPLIER = 10;

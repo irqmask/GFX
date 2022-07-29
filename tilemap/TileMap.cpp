@@ -25,7 +25,7 @@ TileMap::TileMap(std::string tileset,
     }
 
     // create default tile lookup map
-    for (size_t i = 0; i < frameSet->size(); i++) {
+    for (int32_t i = 0; i < static_cast<int32_t>(frameSet->size()); i++) {
         tileLookup[i] = frameSet->at(i);
     }
 }

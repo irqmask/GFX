@@ -100,7 +100,7 @@ void MyScene::draw()
     SDL_SetRenderDrawColor(this->renderer, 0, 0, 64, 255);
     SDL_RenderClear(this->renderer);
 
-    int32_t nj = openedJoysticks.size();
+    int32_t nj = static_cast<int32_t>(openedJoysticks.size());
     std::string text = "Number of joysticks " + std::to_string(nj);
     font->print(10, 10, text);
     for (int i=0; i<nj; i++) {
