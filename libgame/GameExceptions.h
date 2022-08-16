@@ -93,3 +93,15 @@ public:
         compileErrorMessage(fmt, args...);
     };
 };
+
+
+class BufferAllocFailed : GameException
+{
+public:
+    template <class... Args>
+    BufferAllocFailed(const char* file, uint32_t line, const char* function, const char* fmt, Args... args)
+        : GameException(file, line, function)
+    {
+        compileErrorMessage(fmt, args...);
+    };
+};

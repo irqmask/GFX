@@ -1,13 +1,15 @@
+#include "RatLevel.h"
+
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 
 #include "BitmapFont.h"
+#include "Path.h"
+
 #include "Cheese.h"
 #include "EnemyMouse.h"
 #include "Mouse.h"
-
-#include "RatLevel.h"
 
 TileMap::tiletype_t RatLevel::level1[] =
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -25,10 +27,12 @@ RatLevel::RatLevel(std::shared_ptr<Engine> engine)
     : Scene(engine)
 {
     std::cout << __FUNCTION__ << std::endl;
-    
-    font = std::shared_ptr<BitmapFont>(new BitmapFont(std::string("font.png"), 9, 16, 20, 128));
+    Path assetPath = Path::fromCurrentExecutable().plusPath("assets");
 
-    tilemap = std::shared_ptr<TileMap>(new TileMap(std::string("ratrace.png"), TILE_W, TILE_H));
+    font = std::shared_ptr<BitmapFont>(new BitmapFont(assetPath.plusFilename("font.png"), 9, 16, 20, 128));
+    std::shared_ptr<ImageData> image = std::make_shared<ImageData>(assetPath.plusFilename("ratrace.png"));
+
+    tilemap = std::shared_ptr<TileMap>(new TileMap(image, TILE_W, TILE_H));
     tilemap->load(level1, LEVEL_W, LEVEL_H);
     Rect<int32_t> mapviewrect;
     mapviewrect.pos.x = 5;
@@ -37,7 +41,7 @@ RatLevel::RatLevel(std::shared_ptr<Engine> engine)
     mapviewrect.size.y = static_cast<int32_t>(static_cast<float>(engine->getWindowHeight()) * 0.9f);
     tilemap->setDrawRect(mapviewrect);
 
-    mouse = std::make_shared<Mouse>(engine, tilemap);
+    mouse = std::make_shared<Mouse>(engine, image, tilemap);
 }
 
 
@@ -139,9 +143,6 @@ void RatLevel::draw()
     /*auto tp = mouse->getTilemapPos();
     tilepostext << "tileX = " << std::setprecision(3) << tp.x << " tileY = " << tp.y;
     font->print(10, 20, tilepostext.str());*/
-
-
-
 }
 
 

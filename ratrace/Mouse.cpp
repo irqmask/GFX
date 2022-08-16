@@ -1,10 +1,10 @@
 #include <memory>
 #include <vector>
 
+#include "Mouse.h"
+
 #include "Sprite.h"
 #include "TileMap.h"
-
-#include "Mouse.h"
 
 const std::vector<Rect<int32_t>> Mouse::FRAMES_UP = {{ 0, 32, 32, 32}};
 
@@ -14,9 +14,7 @@ const std::vector<Rect<int32_t>> Mouse::FRAMES_DOWN = {{ 64, 32, 32, 32}};
 
 const std::vector<Rect<int32_t>> Mouse::FRAMES_LEFT = {{ 96, 32, 32, 32}};
 
-static constexpr auto TILESET_FILE = "ratrace.png";
-
-Mouse::Mouse(std::shared_ptr<Engine> engine, std::shared_ptr<TileMap> tm)
+Mouse::Mouse(std::shared_ptr<Engine> engine, std::shared_ptr<ImageData> tileset, std::shared_ptr<TileMap> tm)
     : Sprite()
     , d(DIR_NONE)
     , vx(0.0f)
@@ -24,20 +22,20 @@ Mouse::Mouse(std::shared_ptr<Engine> engine, std::shared_ptr<TileMap> tm)
     , engine(engine)
     , tilemap(tm)
 {
-    std::shared_ptr<FrameSet> fs_up = std::make_shared<FrameSet>();
-    fs_up->loadFromImage(TILESET_FILE, FRAMES_UP);
+    std::shared_ptr<FrameSet> fs_up = std::make_shared<FrameSet>();   
+    fs_up->loadFromImage(tileset, FRAMES_UP);
     addFrameSet(0, fs_up);
 
     std::shared_ptr<FrameSet> fs_right = std::make_shared<FrameSet>();
-    fs_right->loadFromImage(TILESET_FILE, FRAMES_RIGHT);
+    fs_right->loadFromImage(tileset, FRAMES_RIGHT);
     addFrameSet(1, fs_right);
 
     std::shared_ptr<FrameSet> fs_down = std::make_shared<FrameSet>();
-    fs_down->loadFromImage(TILESET_FILE, FRAMES_DOWN);
+    fs_down->loadFromImage(tileset, FRAMES_DOWN);
     addFrameSet(2, fs_down);
 
     std::shared_ptr<FrameSet> fs_left = std::make_shared<FrameSet>();
-    fs_left->loadFromImage(TILESET_FILE, FRAMES_LEFT);
+    fs_left->loadFromImage(tileset, FRAMES_LEFT);
     addFrameSet(3, fs_left);
 }
 

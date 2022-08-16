@@ -6,8 +6,6 @@ set(CMAKE_CXX_STANDARD 11)
     
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
-file(GLOB SDL_DLLS ${SDL2_LIBRARY_DIR}/*.dll)
-file(GLOB SDL_IMAGE_DLLS ${SDL2_IMAGE_LIBRARY_DIR}/*.dll)
 
 set(tilemap_SRC
     MyScene.h
@@ -24,10 +22,7 @@ add_executable(tilemap ${tilemap_SRC})
 target_link_libraries(tilemap libgame ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 
 # post-build step
-add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/font.png ${EXECUTABLE_OUTPUT_PATH})
-add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/tiles_30x30_test.png ${EXECUTABLE_OUTPUT_PATH})
-
-if(WIN32)
-    add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_DLLS} ${EXECUTABLE_OUTPUT_PATH})
-    add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_IMAGE_DLLS} ${EXECUTABLE_OUTPUT_PATH})
-endif(WIN32)
+set(ASSET_OUTPUT_PATH "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assets")
+add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory ${ASSET_OUTPUT_PATH})
+add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/font.png "${ASSET_OUTPUT_PATH}")
+add_custom_command(TARGET tilemap POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/tiles_30x30_test.png "${ASSET_OUTPUT_PATH}")

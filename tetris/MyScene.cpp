@@ -1,8 +1,10 @@
+#include "MyScene.h"
+
 #include <chrono>
 #include <iostream>
 #include <thread>
 
-#include "MyScene.h"
+#include "Path.h"
 
 MyScene::MyScene(std::shared_ptr<Engine> engine)
     : Scene(engine)
@@ -17,8 +19,9 @@ MyScene::MyScene(std::shared_ptr<Engine> engine)
     , score(0)
     , highscore(0)
 {
-    background = std::make_shared<ImageData>("background.png");
-    font = std::shared_ptr<BitmapFont>(new BitmapFont(std::string("font.png"), 9, 16, 20, 128));
+    Path assetPath = Path::fromCurrentExecutable().plusPath("assets");
+    background = std::make_shared<ImageData>(assetPath.plusFilename("background.png"));
+    font = std::shared_ptr<BitmapFont>(new BitmapFont(assetPath.plusFilename("font.png"), 9, 16, 20, 128));
 
     for (int32_t y = 0; y < FIELD_HEIGHT; y++) {
         for (int32_t x = 0; x < FIELD_WIDTH; x++) {

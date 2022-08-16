@@ -1,11 +1,14 @@
+#include "MyScene.h"
+
 #include <iostream>
 
-#include "MyScene.h"
+#include "Path.h"
 
 MyScene::MyScene(std::shared_ptr<Engine> engine)
     : Scene(engine)
 {
-    font = std::shared_ptr<BitmapFont>(new BitmapFont(std::string("font.png"), 9, 16, 20, 128));
+    Path assetPath = Path::fromCurrentExecutable().plusPath("assets");
+    font = std::shared_ptr<BitmapFont>(new BitmapFont(assetPath.plusFilename("font.png"), 9, 16, 20, 128));
     SDL_SetRenderDrawColor(renderer, 0, 0, 64, 255);
     detectJoysticks();
 }

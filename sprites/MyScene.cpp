@@ -1,9 +1,13 @@
+#include "MyScene.h"
+
 #include <iostream>
 
-#include "MyScene.h"
+#include "Path.h"
 
 MyScene::MyScene(std::shared_ptr<Engine> engine) : Scene(engine)
 {
+    Path assetPath = Path::fromCurrentExecutable().plusPath("assets");
+    std::shared_ptr<ImageData> image = std::make_shared<ImageData>(assetPath.plusFilename("spritexb-4248.png"));
     std::vector<Rect<int32_t>> spriteFrames1 = {{  0,   0, 32, 48},
                                                 { 32,   0, 32, 48},
                                                 { 64,   0, 32, 48},
@@ -21,13 +25,13 @@ MyScene::MyScene(std::shared_ptr<Engine> engine) : Scene(engine)
                                                 { 64, 144, 32, 48},
                                                 { 96, 144, 32, 48}};
     std::shared_ptr<FrameSet> fs1 = std::make_shared<FrameSet>();
-    fs1->loadFromImage("spritexb-4248.png", spriteFrames1);
+    fs1->loadFromImage(image, spriteFrames1);
     std::shared_ptr<FrameSet> fs2 = std::make_shared<FrameSet>();
-    fs2->loadFromImage("spritexb-4248.png", spriteFrames2);
+    fs2->loadFromImage(image, spriteFrames2);
     std::shared_ptr<FrameSet> fs3 = std::make_shared<FrameSet>();
-    fs3->loadFromImage("spritexb-4248.png", spriteFrames3);
+    fs3->loadFromImage(image, spriteFrames3);
     std::shared_ptr<FrameSet> fs4 = std::make_shared<FrameSet>();
-    fs4->loadFromImage("spritexb-4248.png", spriteFrames4);
+    fs4->loadFromImage(image, spriteFrames4);
 
     //std::shared_ptr<Sprite> sprite1 = std::make_shared<Sprite>();
 

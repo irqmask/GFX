@@ -1,7 +1,7 @@
 #include "EnemyMouse.h"
 
-EnemyMouse::EnemyMouse(std::shared_ptr<Engine> engine, std::shared_ptr<TileMap> tm)
-    : Mouse(engine, tm)
+EnemyMouse::EnemyMouse(std::shared_ptr<Engine> engine, std::shared_ptr<ImageData> tileset, std::shared_ptr<TileMap> tm)
+    : Mouse(engine, tileset, tm)
 {
 
 }

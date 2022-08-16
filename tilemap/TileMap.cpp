@@ -1,7 +1,8 @@
-#include "Sprite.h"
 #include "TileMap.h"
 
-TileMap::TileMap(std::string tileset,
+#include "Sprite.h"
+
+TileMap::TileMap(std::shared_ptr<ImageData> tileset,
                  int32_t tile_width, int32_t tile_height)
     : tileWidth(tile_width)
     , tileHeight(tile_height)
@@ -9,17 +10,16 @@ TileMap::TileMap(std::string tileset,
     , height(0)
     , mapData(nullptr)
 {
-    std::shared_ptr<ImageData> image = std::make_shared<ImageData>(tileset);
     frameSet = std::make_shared<FrameSet>();
 
-    int tiles_in_row = image->getH() / tile_height;
-    int tiles_in_column = image->getW() / tile_width;
+    int tiles_in_row = tileset->getH() / tile_height;
+    int tiles_in_column = tileset->getW() / tile_width;
 
     // load map tile graphics
     for (int row = 0; row < tiles_in_row; row++) {
         for (int column = 0; column < tiles_in_column; column++) {
             Rect<int32_t> r(column * tile_height, row * tile_width, tile_height, tile_width);
-            auto f = std::make_shared<Frame>(image->createImageFromCutout(r));
+            auto f = std::make_shared<Frame>(tileset->createImageFromCutout(r));
             frameSet->push_back(f);
         }
     }

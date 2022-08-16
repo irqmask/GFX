@@ -57,7 +57,7 @@ private:
 class FrameSet : public std::vector<std::shared_ptr<Frame>>
 {
 public:
-    void loadFromImage(std::string file_path, const std::vector<Rect<int32_t>> & frameRects);
+    void loadFromImage(std::shared_ptr<ImageData> image, const std::vector<Rect<int32_t>> & frameRects);
 };
 
 /// A Sprite is the display of an actor in the game, e.g. player or enemy.

@@ -39,5 +39,4 @@ private:
     std::shared_ptr<TileMap> tilemap;
     std::vector<std::shared_ptr<EnemyMouse>> enemyMiceList;
     std::vector<std::shared_ptr<Cheese>> cheeseList;
-
 };

@@ -13,11 +13,11 @@ public:
 
     ///
     /// \brief TileMap
-    /// \param[in] tileset      Name of the tileset to load map tiles from
+    /// \param[in] tileset      Tileset image to load map tiles from
     /// \param[in] tile_width   Tile width in pixels
     /// \param[in] tile_height  Tile Height in pixels
     ///
-    TileMap(std::string tileset,
+    TileMap(std::shared_ptr<ImageData> tileset,
             int32_t tile_width, int32_t tile_height);
     ~TileMap();
 

@@ -28,9 +28,6 @@ add_executable(sprites ${sprites_SRC})
 target_link_libraries(sprites libgame ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 
 # post-build step
-add_custom_command(TARGET sprites POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/spritexb-4248.png ${EXECUTABLE_OUTPUT_PATH})
-
-if(WIN32)
-    add_custom_command(TARGET sprites POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_DLLS} ${EXECUTABLE_OUTPUT_PATH})
-    add_custom_command(TARGET sprites POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_IMAGE_DLLS} ${EXECUTABLE_OUTPUT_PATH})
-endif(WIN32)
+set(ASSET_OUTPUT_PATH "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assets")
+add_custom_command(TARGET sprites POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory ${ASSET_OUTPUT_PATH})
+add_custom_command(TARGET sprites POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/spritexb-4248.png ${ASSET_OUTPUT_PATH})

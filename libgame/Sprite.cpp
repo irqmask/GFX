@@ -119,10 +119,8 @@ void Frame::draw(int32_t x, int32_t y)
 
 // --- FrameSet ---------------------------------------------------------------
 
-void FrameSet::loadFromImage(std::string filename, const std::vector<Rect<int32_t>> & frame_rects)
+void FrameSet::loadFromImage(std::shared_ptr<ImageData> image, const std::vector<Rect<int32_t>> & frame_rects)
 {   
-    std::shared_ptr<ImageData> image = std::make_shared<ImageData>(filename);
-
     for (const auto & r : frame_rects) {
         auto frame = std::make_shared<Frame>(image->createImageFromCutout(r));
         this->push_back(frame);

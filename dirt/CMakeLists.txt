@@ -23,8 +23,3 @@ include_directories(${PROJECT_SOURCE_DIR}/../libgame ${SDL2_INCLUDE_DIRS} ${SDL2
 add_executable(dirt ${dirt_SRC})
 
 target_link_libraries(dirt PRIVATE libgame ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
-
-if(WIN32)
-    add_custom_command(TARGET dirt POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_DLLS} ${EXECUTABLE_OUTPUT_PATH}/Debug)
-    add_custom_command(TARGET dirt POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SDL_DLLS} ${EXECUTABLE_OUTPUT_PATH}/Release)
-endif(WIN32)

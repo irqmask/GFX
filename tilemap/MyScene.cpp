@@ -1,6 +1,8 @@
+#include "MyScene.h"
+
 #include <iostream>
 
-#include "MyScene.h"
+#include "Path.h"
 
 uint32_t MyScene::level0[MyScene::levelWidth * MyScene::levelHeight] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -21,11 +23,14 @@ MyScene::MyScene(std::shared_ptr<Engine> engine)
     , my(0)
 {
     std::cout << __FUNCTION__ << std::endl;
-    tilemap = std::shared_ptr<TileMap>(new TileMap(std::string("tiles_30x30_test.png"), tileWidth, tileHeight));
+    Path assetPath = Path::fromCurrentExecutable().plusPath("assets");
+    std::shared_ptr<ImageData> image = std::make_shared<ImageData>(assetPath.plusFilename("tiles_30x30_test.png"));
+
+    tilemap = std::shared_ptr<TileMap>(new TileMap(image, tileWidth, tileHeight));
     tilemap->load(level0, levelWidth, levelHeight);
     Rect<int32_t> r(0, 0, 640, 480);
     tilemap->setDrawRect(r);
-    font = std::shared_ptr<BitmapFont>(new BitmapFont(std::string("font.png"), 9, 16, 20, 128));
+    font = std::shared_ptr<BitmapFont>(new BitmapFont(assetPath.plusFilename("font.png"), 9, 16, 20, 128));
 }
 
 MyScene::~MyScene()
