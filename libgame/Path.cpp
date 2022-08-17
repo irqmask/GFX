@@ -6,6 +6,7 @@
 #include "Windows.h"
 #define getcwd _getcwd
 #else
+#include <unistd.h>
 #endif
 
 #include "GameExceptions.h"
@@ -26,19 +27,22 @@ Path::Path(const std::string &rootpath)
 }
 
 
-#ifdef _WIN32
 Path Path::fromCurrentExecutable()
 {
     const unsigned long PATH_MAX_SIZE = 2048;
     char buf[PATH_MAX_SIZE + 1];
+#ifdef _WIN32
     unsigned long len = GetModuleFileNameA(NULL, buf, PATH_MAX_SIZE);
     buf[PATH_MAX_SIZE] = '\0';
 
     if (GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
         throw BufferAllocFailed(LOC, "Path to Executable exceeds %d bytes!", PATH_MAX_SIZE);
     }
+    if (len == 0) {
+        throw OperationFailed(LOC, "Unable to get path to executable! OS error %d", GetLastError());
+    }
 #else
-    ssize_t rc = readlink("/proc/self/exe", buf, sizeof(buf) - 1);
+    ssize_t rc = readlink("/proc/self/exe", buf, PATH_MAX_SIZE);
     size_t len = 0;
     if (rc <= 1) {
         throw OperationFailed(LOC, "Unable to get path to executable!");
@@ -46,10 +50,10 @@ Path Path::fromCurrentExecutable()
     else {
         len = rc;
     }
-#endif
     if (len == 0) {
-        throw OperationFailed(LOC, "Unable to get path to executable! OS error %d", GetLastError());
+        throw OperationFailed(LOC, "Unable to get path to executable! OS error %d", errno);
     }
+#endif
 
     std::string s(buf);
 
