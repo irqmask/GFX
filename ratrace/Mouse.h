@@ -35,7 +35,7 @@ public:
     bool isPosFree(const Vec2d<float> & pos) const;
 
 protected:
-    static constexpr float VELOCITY = 1.0f;
+    static constexpr float VELOCITY = 3.0f;
     static constexpr float MOVE_LIMIT = 0.95f;
 
     Direction d;

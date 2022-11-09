@@ -87,9 +87,11 @@ void TileMap::draw()
     camX = static_cast<int32_t>(cameraPos.x);
     camY = static_cast<int32_t>(cameraPos.y);
 
-    float rx = cameraPos.x - camX;
-    float ry = cameraPos.y - camY;
-    printf("RX=%.02f RY=%.02f\n", rx, ry);
+    float rx = (cameraPos.x - camX) * this->tileWidth;
+    float ry = (cameraPos.y - camY) * this->tileHeight;
+    int32_t ox = rx + 0.5f;
+    int32_t oy = ry + 0.5f;
+ 
     posX = this->drawRect.pos.x;
     for (int32_t x = camX; x < camX + numDrawTilesX; x++) {
         posY = this->drawRect.pos.y;
@@ -98,7 +100,7 @@ void TileMap::draw()
                 uint32_t tile = this->mapData[y * this->width + x];
                 std::shared_ptr<Frame> frame = tileLookup[tile];
                 if (frame != nullptr)
-                    frame->draw(posX, posY);
+                    frame->draw(posX - ox, posY - oy);
             }
             posY += this->tileHeight;
         }
@@ -141,8 +143,10 @@ Vec2d<int32_t> TileMap::getDrawPos(Vec2d<float> pos)
 {
     pos.x -= cameraPos.x;
     pos.y -= cameraPos.y;
+
     pos.x *= this->tileWidth;
     pos.y *= this->tileHeight;
+
     pos.x += this->drawRect.pos.x;
     pos.y += this->drawRect.pos.y;
     pos.x += 0.5f;
