@@ -46,6 +46,7 @@
 *.kdev4
 *_version.h
 *_old.*
+*.user
 
 # Other
 *.ps
