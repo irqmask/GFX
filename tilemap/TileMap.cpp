@@ -78,7 +78,7 @@ void TileMap::setTile(const Vec2d<int32_t> & pos, TileMap::tiletype_t tile)
     this->mapData[pos.y * this->width + pos.x] = tile;
 }
 
-
+/*
 void TileMap::draw()
 {
     int32_t posX, posY;
@@ -105,6 +105,32 @@ void TileMap::draw()
             posY += this->tileHeight;
         }
         posX += this->tileWidth;
+    }
+}
+*/
+void TileMap::draw()
+{
+    int32_t camX, camY;
+
+    camX = static_cast<int32_t>(cameraPos.x);
+    camY = static_cast<int32_t>(cameraPos.y);
+
+    float rx = (cameraPos.x - camX) * this->tileWidth;
+    float ry = (cameraPos.y - camY) * this->tileHeight;
+    int32_t ox = rx; //FIXME needed?  +0.5f;
+    int32_t oy = ry; //FIXME needed? +0.5f;
+
+    for (int32_t x = 0; x < numDrawTilesX; x++) {
+        for (int32_t y = 0; y < numDrawTilesY; y++) {
+            int32_t tx = x + camX;
+            int32_t ty = y + camY;
+            if (tx >= 0 && ty >= 0 && tx < this->width && ty < this->height) {
+                uint32_t tile = this->mapData[ty * this->width + tx];
+                std::shared_ptr<Frame> frame = tileLookup[tile];
+                if (frame != nullptr)
+                    frame->draw(x * tileWidth - rx, y * tileHeight - ry);
+            }
+        }
     }
 }
 
