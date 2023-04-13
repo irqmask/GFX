@@ -117,8 +117,6 @@ void TileMap::draw()
 
     float rx = (cameraPos.x - camX) * this->tileWidth;
     float ry = (cameraPos.y - camY) * this->tileHeight;
-    int32_t ox = rx; //FIXME needed?  +0.5f;
-    int32_t oy = ry; //FIXME needed? +0.5f;
 
     for (int32_t x = 0; x < numDrawTilesX; x++) {
         for (int32_t y = 0; y < numDrawTilesY; y++) {

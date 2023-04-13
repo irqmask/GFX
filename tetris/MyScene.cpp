@@ -119,8 +119,7 @@ void MyScene::update(float elapsed)
 
 void MyScene::draw()
 {
-    SDL_SetRenderDrawColor(this->renderer, 0, 0, 0, 255);
-    SDL_RenderClear(this->renderer);
+    clearBackground(0, 0, 0, 255);
 
     background->draw(0, 0);
     drawField();
@@ -255,10 +254,10 @@ int32_t MyScene::calcScore(int32_t removedRows)
 
 void MyScene::drawBox(int32_t x, int32_t y, int32_t w, int32_t h)
 {
-    SDL_SetRenderDrawColor(this->renderer, 255, 255, 192, 255);
-    engine->drawRect(x - 1, y - 1, w + 2, h + 2);
-    SDL_SetRenderDrawColor(this->renderer, 32, 32, 32, 96);
-    engine->drawFilledRect(x, y, w, h);
+    setDrawForegroundColor(255, 255, 192, 255);
+    drawRect(x - 1, y - 1, w + 2, h + 2);
+    setDrawForegroundColor(32, 32, 32, 96);
+    drawFilledRect(x, y, w, h);
 }
 
 
@@ -275,14 +274,14 @@ void MyScene::drawField()
     drawBox(FIELD_OFFSET_X, FIELD_OFFSET_Y, BLOCK_WIDTH * FIELD_WIDTH, BLOCK_HEIGHT * FIELD_HEIGHT);
 
 
-    SDL_SetRenderDrawColor(this->renderer, 255, 255, 192, 128);
+    setDrawForegroundColor(255, 255, 192, 128);
     for (int32_t y = 0; y < FIELD_HEIGHT; y++) {
         for (int32_t x = 0; x < FIELD_WIDTH; x++) {
             if (field[x][y] != 0) {
-                engine->drawFilledRect(FIELD_OFFSET_X + x * BLOCK_WIDTH,
-                                       FIELD_OFFSET_Y + y * BLOCK_HEIGHT,
-                                       BLOCK_WIDTH,
-                                       BLOCK_HEIGHT);
+                drawFilledRect(FIELD_OFFSET_X + x * BLOCK_WIDTH,
+                               FIELD_OFFSET_Y + y * BLOCK_HEIGHT,
+                               BLOCK_WIDTH,
+                               BLOCK_HEIGHT);
             }
         }
     }
@@ -291,17 +290,17 @@ void MyScene::drawField()
 
 void MyScene::drawFullRows()
 {
-    SDL_SetRenderDrawColor(this->renderer, 10, 20, 128, 128);
+    setDrawForegroundColor(10, 20, 128, 128);
 
     for (int32_t y : fullRows) {
-        engine->drawFilledRect(FIELD_OFFSET_X, FIELD_OFFSET_Y + y * BLOCK_HEIGHT, FIELD_WIDTH * BLOCK_WIDTH, BLOCK_HEIGHT);
+        drawFilledRect(FIELD_OFFSET_X, FIELD_OFFSET_Y + y * BLOCK_HEIGHT, FIELD_WIDTH * BLOCK_WIDTH, BLOCK_HEIGHT);
     }
 }
 
 
 void MyScene::drawTetromino(int32_t x, int32_t y, int32_t fx, int32_t fy, const Tetromino &t)
 {
-    SDL_SetRenderDrawColor(this->renderer, 192, 192, 192, 255);
+    setDrawForegroundColor(192, 192, 192, 255);
 
     for (auto b: t)
     {
@@ -309,9 +308,9 @@ void MyScene::drawTetromino(int32_t x, int32_t y, int32_t fx, int32_t fy, const 
         int32_t fieldY = fy + b.y;
         if (fieldX < 0 || fieldY < 0) continue;
 
-        engine->drawRect(x + fieldX * BLOCK_WIDTH,
-                         y + fieldY * BLOCK_HEIGHT,
-                         BLOCK_WIDTH,
-                         BLOCK_HEIGHT);
+        drawRect(x + fieldX * BLOCK_WIDTH,
+                 y + fieldY * BLOCK_HEIGHT,
+                 BLOCK_WIDTH,
+                 BLOCK_HEIGHT);
     }
 }

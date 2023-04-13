@@ -13,6 +13,7 @@ file(GLOB SDL_IMAGE_DLLS ${SDL2_IMAGE_LIBRARY_DIR}/*.dll)
 set (libgame_SRCS
     BitmapFont.h
     BitmapFont.cpp
+    EngineInterface.h
     Engine.h
     Engine.cpp
     GameExceptions.h

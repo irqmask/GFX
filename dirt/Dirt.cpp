@@ -9,7 +9,7 @@
 DirtScene::DirtScene(std::shared_ptr<Engine> engine) : Scene(engine)
 {
     std::cout << __FUNCTION__ << std::endl;
-    this->data = (bool*)calloc((size_t)(this->w * this->h), sizeof(bool));
+    this->data = (bool*)calloc((size_t)(windowWidth() * windowHeight()), sizeof(bool));
     srand((int)std::time(0));
 }
 
@@ -42,13 +42,11 @@ void DirtScene::draw()
 {
     bool particles_moved;
     
-    SDL_SetRenderDrawColor(this->renderer, 255,220,0,0);
-    SDL_RenderClear(this->renderer);
-    
+    clearBackground(255,220,0,0);
     
     particles_moved = advanceAndDrawLines();
     if (!particles_moved) {
-        putBlob(randInt(30, this->w-30),
+        putBlob(randInt(30, windowWidth() - 30),
                 randInt(30, 100),
                 randInt(15, 30));
     }
@@ -82,15 +80,18 @@ int DirtScene::randInt(int s, int e)
 
 void DirtScene::putBlob(int cx, int cy, int r)
 {
-    int xx, yy;
+    int32_t xx, yy;
+
+    int32_t w = windowWidth();
+    int32_t h = windowHeight();
     
     std::cout << "putBlob " << cx << " " << cy << " " << r << std::endl;
     for (int x=-r/2; x<r/2; x++) {
         for (int y=-r/2; y<r/2; y++) {
             if (x*x + y*y < r*r/4) {
                xx = x + cx; yy = cy + y;
-               if (xx >= 0 && xx < this->w && yy >= 0 && yy < this->h) {
-                   int offset = yy*this->w + xx;
+               if (xx >= 0 && xx < w && yy >= 0 && yy < h) {
+                   int offset = yy*w + xx;
                    data[offset] = !data[offset];
                }
             }
@@ -101,24 +102,27 @@ void DirtScene::putBlob(int cx, int cy, int r)
 void DirtScene::putPixel(int x, int y, bool pixel)
 {
     if (pixel)
-        SDL_SetRenderDrawColor(renderer, x/2 % 255, 0, 240, 255);
+        setDrawForegroundColor(x / 2 % 255, 0, 240, 255);
     else
-        SDL_SetRenderDrawColor(renderer, 255, 240, 0, 255);
-    
-    SDL_RenderDrawPoint(this->renderer, x, y);
+        setDrawForegroundColor(255, 240, 0, 255);
+
+    drawPixel(x, y);
 }
 
 bool DirtScene::advanceAndDrawLines()
 {    
     bool particles_moved = false;
     
-    if (this->h < 2) return false;
+    int32_t w = windowWidth();
+    int32_t h = windowHeight();
+
+    if (h < 2) return false;
     
-    for (int y = this->h - 1; y > 0; y--) {      
-        bool* current_line = &this->data[y*this->w];
+    for (int y = h - 1; y > 0; y--) {      
+        bool* current_line = &this->data[y*w];
         // line above
-        bool* above_line = &this->data[(y-1)*this->w];
-        for (int x = 0; x < this->w; x++) {
+        bool* above_line = &this->data[(y-1)*w];
+        for (int x = 0; x < w; x++) {
             if (!current_line[x] && above_line[x]) {
                 current_line[x] = true;
                 above_line[x] = false;
@@ -132,8 +136,11 @@ bool DirtScene::advanceAndDrawLines()
 
 /*void CDirtScene::putParticle(int x, int y, bool existing)
 {
-    if (x>=0 && x<this->w && y>=0 && y<this->h) {
-        int offset = y*this->w + x;
+    int32_t w = windowWidth();
+    int32_t h = windowHeight();
+
+    if (x>=0 && x<w && y>=0 && y<h) {
+        int offset = y*w + x;
         this->data[offset] = existing;
     }
 }*/

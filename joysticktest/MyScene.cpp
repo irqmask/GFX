@@ -9,7 +9,6 @@ MyScene::MyScene(std::shared_ptr<Engine> engine)
 {
     Path assetPath = Path::fromCurrentExecutable().plusPath("assets");
     font = std::shared_ptr<BitmapFont>(new BitmapFont(assetPath.plusFilename("font.png"), 9, 16, 20, 128));
-    SDL_SetRenderDrawColor(renderer, 0, 0, 64, 255);
     detectJoysticks();
 }
 
@@ -31,8 +30,8 @@ void MyScene::detectJoysticks()
 
 void MyScene::printJoystickInfo(int32_t x, int32_t y, int32_t joyidx)
 {
-    engine->setDrawForegroundColor(200, 255, 200, 255);
-    engine->drawLine(x, y + 10, x, y + 50);
+    setDrawForegroundColor(200, 255, 200, 255);
+    drawLine(x, y + 10, x, y + 50);
     font->print(x, y + 10, "joystick " + std::to_string(joyidx));
     font->print(x, y + 20, "  numAxes    " + std::to_string(openedJoysticks.at(joyidx)->numAxes()));
     font->print(x, y + 30, "  numButtons " + std::to_string(openedJoysticks.at(joyidx)->numButtons()));
@@ -41,28 +40,28 @@ void MyScene::printJoystickInfo(int32_t x, int32_t y, int32_t joyidx)
 
 void MyScene::drawJoystickStateDigital(int32_t x, int32_t y, int32_t joyidx)
 {
-    engine->setDrawForegroundColor(255, 200, 200, 255);
+    setDrawForegroundColor(255, 200, 200, 255);
     std::shared_ptr<Joystick> j = openedJoysticks.at(joyidx);
     // up
-    engine->drawRect(x - 3, y - 15, 6, 10);
+    drawRect(x - 3, y - 15, 6, 10);
     // down
-    engine->drawRect(x - 3, y + 5, 6, 10);
+    drawRect(x - 3, y + 5, 6, 10);
     // left
-    engine->drawRect(x - 15, y - 3, 10, 6);
+    drawRect(x - 15, y - 3, 10, 6);
     // right
-    engine->drawRect(x + 5, y - 3, 10, 6);
+    drawRect(x + 5, y - 3, 10, 6);
 
     if (j->isUp()) {
-        engine->drawFilledRect(x - 2, y - 14, 4, 8);
+        drawFilledRect(x - 2, y - 14, 4, 8);
     }
     if (j->isDown()) {
-        engine->drawFilledRect(x - 2, y + 6, 4, 8);
+        drawFilledRect(x - 2, y + 6, 4, 8);
     }
     if (j->isLeft()) {
-        engine->drawFilledRect(x - 14, y - 2, 8, 4);
+        drawFilledRect(x - 14, y - 2, 8, 4);
     }
     if (j->isRight()) {
-        engine->drawFilledRect(x + 6, y - 2, 8, 4);
+        drawFilledRect(x + 6, y - 2, 8, 4);
     }
 }
 
@@ -70,9 +69,9 @@ void MyScene::drawJoystickButtonState(int32_t x, int32_t y, int32_t joyidx)
 {
     std::shared_ptr<Joystick> j = openedJoysticks.at(joyidx);
     for (int32_t i=0; i<j->numButtons(); i++) {
-        engine->drawCircle(x + i * 12, y, 5);
+        drawCircle(x + i * 12, y, 5);
         if (j->isButton(i)) {
-            engine->drawFilledCircle(x + i * 12, y, 4);
+            drawFilledCircle(x + i * 12, y, 4);
         }
     }
 }
@@ -100,8 +99,7 @@ void MyScene::update(float elapsed)
 
 void MyScene::draw()
 {
-    SDL_SetRenderDrawColor(this->renderer, 0, 0, 64, 255);
-    SDL_RenderClear(this->renderer);
+    clearBackground(0, 0, 64, 255);
 
     int32_t nj = static_cast<int32_t>(openedJoysticks.size());
     std::string text = "Number of joysticks " + std::to_string(nj);

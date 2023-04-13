@@ -37,8 +37,8 @@ RatLevel::RatLevel(std::shared_ptr<Engine> engine)
     Rect<int32_t> mapviewrect;
     mapviewrect.pos.x = 5;
     mapviewrect.pos.y = 5;
-    mapviewrect.size.x = static_cast<int32_t>(static_cast<float>(engine->getWindowWidth()) * 0.75f);
-    mapviewrect.size.y = static_cast<int32_t>(static_cast<float>(engine->getWindowHeight()) * 0.9f);
+    mapviewrect.size.x = static_cast<int32_t>(static_cast<float>(windowWidth()) * 0.75f);
+    mapviewrect.size.y = static_cast<int32_t>(static_cast<float>(windowHeight()) * 0.9f);
     tilemap->setDrawRect(mapviewrect);
 
     mouse = std::make_shared<Mouse>(engine, image, tilemap);
@@ -114,16 +114,13 @@ void RatLevel::update(float elapsed)
 
 void RatLevel::draw()
 {
-    SDL_SetRenderDrawColor(this->renderer, 255, 255, 0, 255);
-    SDL_RenderClear(this->renderer);
+    clearBackground(255, 255, 0, 255);
 
     tilemap->draw();
-    font->print(0, 0, "Hallo Welt!");
 
     for (auto cheese : cheeseList) {
         cheese->draw();
     }
-
 
     mouse->draw();
 
@@ -131,18 +128,14 @@ void RatLevel::draw()
         emouse->draw();
     }
 
-
     // debug output
-    engine->setDrawForegroundColor(127, 127, 127, 127);
-    engine->drawFilledRect(5, 5, 250, 50);
+    setDrawForegroundColor(127, 127, 127, 127);
+    drawFilledRect(5, 5, 250, 50);
     Vec2d<float> pos = mouse->getPos();
     std::stringstream postext;
     postext << "X = " << std::setprecision(4) << pos.x << " Y = " << pos.y;
     font->print(10, 10, postext.str());
     std::stringstream tilepostext;
-    /*auto tp = mouse->getTilemapPos();
-    tilepostext << "tileX = " << std::setprecision(3) << tp.x << " tileY = " << tp.y;
-    font->print(10, 20, tilepostext.str());*/
 }
 
 
@@ -160,6 +153,6 @@ void RatLevel::eatCheese(std::shared_ptr<Cheese> c)
 
 void RatLevel::levelEnd()
 {
-    keepRunning = false;
+    endScene();
     // TODO implement
 }

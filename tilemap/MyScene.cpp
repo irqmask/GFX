@@ -59,8 +59,8 @@ void MyScene::onEvent(SDL_Event& event)
 
     // convert to map coordinates
     Vec2d<int32_t> mousepos;
-    mousepos.x = static_cast<int32_t>(engine->mouseX / static_cast<float>(tileWidth) + 0.5f);
-    mousepos.y = static_cast<int32_t>(engine->mouseY / static_cast<float>(tileHeight) + 0.5f);
+    mousepos.x = static_cast<int32_t>(mouseX() / static_cast<float>(tileWidth) + 0.5f);
+    mousepos.y = static_cast<int32_t>(mouseY() / static_cast<float>(tileHeight) + 0.5f);
 
     if (event.type == SDL_MOUSEBUTTONDOWN) {
         int tt = tilemap->getTile(mousepos);
@@ -79,13 +79,12 @@ void MyScene::update(float elapsed)
 
 void MyScene::draw()
 {
-    SDL_SetRenderDrawColor(this->renderer, 32, 32, 192, 255);
-    SDL_RenderClear(this->renderer);
+    clearBackground(32, 32, 192, 255);
 
     tilemap->draw();
 
-    engine->setDrawForegroundColor(255, 255, 0, 192);
-    engine->drawRect(mx * tileWidth, my * tileHeight, tileWidth, tileHeight);
+    setDrawForegroundColor(255, 255, 0, 192);
+    drawRect(mx * tileWidth, my * tileHeight, tileWidth, tileHeight);
 
     font->print(0, 0, "Hallo Welt!");
 }

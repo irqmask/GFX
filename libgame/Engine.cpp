@@ -12,8 +12,8 @@ SDL_Renderer* g_renderer = nullptr;
 Engine::Engine(std::string windowTitle, int32_t windowWidth, int32_t windowHeight)
     : elapsed(0.0)
     , fps(0.0)
-    , mouseX(-1.0)
-    , mouseY(-1.0)
+    , msX(-1.0)
+    , msY(-1.0)
     , title(windowTitle)
     , w(windowWidth)
     , h(windowHeight)
@@ -40,13 +40,13 @@ SDL_Renderer* Engine::getRenderer()
 }
 
 
-int32_t Engine::getWindowWidth()
+int32_t Engine::windowWidth() const
 {
     return this->w;
 }
 
 
-int32_t Engine::getWindowHeight()
+int32_t Engine::windowHeight() const
 {
     return this->h;
 }
@@ -85,8 +85,8 @@ void Engine::run()
             SDL_Event event;
             while (SDL_PollEvent(&event)) {
                 if (event.type == SDL_MOUSEMOTION) {
-                    this->mouseX = (float)event.motion.x / this->scaleX;
-                    this->mouseY = (float)event.motion.y / this->scaleY;
+                    this->msX = (float)event.motion.x / this->scaleX;
+                    this->msY = (float)event.motion.y / this->scaleY;
                 }
                 this->current_scene->onEvent(event);
             }
@@ -118,9 +118,22 @@ void Engine::setTitle(std::string title)
 }
 
 
+void Engine::clearBackground(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+{
+    SDL_SetRenderDrawColor(g_renderer, r, g, b, a);
+    SDL_RenderClear(g_renderer);
+}
+
+
 void Engine::setDrawForegroundColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
     SDL_SetRenderDrawColor(g_renderer, r, g, b, a);
+}
+
+
+void Engine::drawPixel(int32_t x, int32_t y)
+{
+    SDL_RenderDrawPoint(g_renderer, x, y);
 }
 
 
@@ -175,6 +188,18 @@ void Engine::drawFilledCircle(int32_t x, int32_t y, int32_t r)
         for (int32_t dx = -r; dx < r; dx++)
             if (dx*dx + dy*dy <= rr)
                 SDL_RenderDrawPoint(g_renderer, dx + x, dy + y);
+}
+
+
+float Engine::mouseX()
+{
+    return msX;
+}
+
+
+float Engine::mouseY()
+{
+    return msY;
 }
 
 // --- private members --------------------------------------------------------

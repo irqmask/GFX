@@ -41,7 +41,7 @@ MyScene::MyScene(std::shared_ptr<Engine> engine) : Scene(engine)
     this->sprite->addFrameSet(2, fs3);
     this->sprite->addFrameSet(3, fs4);
     this->sprite->setDrawPos(1, 1);
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    setDrawForegroundColor(255, 0, 0, 255);
 }
 
 MyScene::~MyScene()
@@ -81,8 +81,6 @@ void MyScene::update(float elapsed)
 
 void MyScene::draw()
 {
-    SDL_SetRenderDrawColor(this->renderer, 255, 0, 0, 255);
-    SDL_RenderClear(this->renderer);
-
+    clearBackground(255, 0, 0, 255);
     sprite->draw();
 }
