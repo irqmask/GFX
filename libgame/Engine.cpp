@@ -20,6 +20,7 @@ Engine::Engine(std::string windowTitle, int32_t windowWidth, int32_t windowHeigh
     , scaleX(1.0)
     , scaleY(1.0)
     , window(nullptr)
+    , renderer(nullptr)
     , current_scene(nullptr)
     , next_scene(nullptr)
 {
@@ -56,7 +57,7 @@ void Engine::setScale(float scaleX, float scaleY)
 {
     this->scaleX = scaleX;
     this->scaleY = scaleY;
-    SDL_RenderSetScale(g_renderer, this->scaleX, this->scaleY);
+    SDL_RenderSetScale(renderer, this->scaleX, this->scaleY);
 }
 
 
@@ -93,7 +94,7 @@ void Engine::run()
             this->current_scene->update(this->elapsed);
             this->current_scene->draw();
 
-            SDL_RenderPresent(g_renderer);
+            SDL_RenderPresent(renderer);
 
             running = this->current_scene->isRunning();
 
@@ -120,26 +121,26 @@ void Engine::setTitle(std::string title)
 
 void Engine::clearBackground(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
-    SDL_SetRenderDrawColor(g_renderer, r, g, b, a);
-    SDL_RenderClear(g_renderer);
+    SDL_SetRenderDrawColor(renderer, r, g, b, a);
+    SDL_RenderClear(renderer);
 }
 
 
 void Engine::setDrawForegroundColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
-    SDL_SetRenderDrawColor(g_renderer, r, g, b, a);
+    SDL_SetRenderDrawColor(renderer, r, g, b, a);
 }
 
 
 void Engine::drawPixel(int32_t x, int32_t y)
 {
-    SDL_RenderDrawPoint(g_renderer, x, y);
+    SDL_RenderDrawPoint(renderer, x, y);
 }
 
 
 void Engine::drawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
 {
-    SDL_RenderDrawLine(g_renderer, x1, y1, x2, y2);
+    SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
 }
 
 
@@ -150,7 +151,7 @@ void Engine::drawRect(int32_t x, int32_t y, int32_t w, int32_t h)
     r.y = y;
     r.w = w;
     r.h = h;
-    SDL_RenderDrawRect(g_renderer, &r);
+    SDL_RenderDrawRect(renderer, &r);
 }
 
 
@@ -161,7 +162,7 @@ void Engine::drawFilledRect(int32_t x, int32_t y, int32_t w, int32_t h)
     r.y = y;
     r.w = w;
     r.h = h;
-    SDL_RenderFillRect(g_renderer, &r);
+    SDL_RenderFillRect(renderer, &r);
 }
 
 
@@ -174,8 +175,8 @@ void Engine::drawCircle(int32_t x, int32_t y, int32_t r)
     do {
         fx = sinf(o) * r;
         fy = - cosf(o) * r;
-        SDL_RenderDrawPointF(g_renderer, fx + x, fy + y);
-        SDL_RenderDrawPointF(g_renderer, -fx + x, fy + y);
+        SDL_RenderDrawPointF(renderer, fx + x, fy + y);
+        SDL_RenderDrawPointF(renderer, -fx + x, fy + y);
         o += 0.2f;
     } while (o < PI);
 }
@@ -187,7 +188,7 @@ void Engine::drawFilledCircle(int32_t x, int32_t y, int32_t r)
     for (int32_t dy = -r; dy < r; dy++)
         for (int32_t dx = -r; dx < r; dx++)
             if (dx*dx + dy*dy <= rr)
-                SDL_RenderDrawPoint(g_renderer, dx + x, dy + y);
+                SDL_RenderDrawPoint(renderer, dx + x, dy + y);
 }
 
 
@@ -217,12 +218,13 @@ void Engine::initializeGFX()
 		throw OperationFailed(LOC, "SDL_CreateWindow() failed! %s", SDL_GetError());
 	}
     
-    g_renderer = SDL_CreateRenderer(this->window, -1, 0);
-	if (g_renderer == nullptr) {
+    renderer = SDL_CreateRenderer(this->window, -1, 0);
+	if (renderer == nullptr) {
 		throw OperationFailed(LOC, "SDL_CreateRenderer() failed! %s", SDL_GetError());
 	}
+    g_renderer = renderer; //FIXME remove static pointer to renderer
         
-    SDL_SetRenderDrawBlendMode(g_renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 }
 
 

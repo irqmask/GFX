@@ -20,15 +20,15 @@ ImageData::ImageData()
 {
     renderer = Engine::getRenderer();
     this->index = g_image_counter++;
-    // TODO remove? printf("%s %d %p %p %p\n", __FUNCTION__, index, this, surface, texture);
 }
+
 
 ImageData::ImageData(std::string filename) 
     : ImageData()
 {
     loadFromFile(filename);
-    // TODO remove? printf("%s %d %p %p %p\n", __FUNCTION__, index, this, surface, texture);
 }
+
 
 ImageData::ImageData(SDL_Surface *surface, SDL_Texture *texture, int32_t w, int32_t h)
     : ImageData()
@@ -37,12 +37,11 @@ ImageData::ImageData(SDL_Surface *surface, SDL_Texture *texture, int32_t w, int3
     this->texture = texture;
     this->w = w;
     this->h = h;
-    // TODO remove? printf("%s %d %p %p %p\n", __FUNCTION__, index, this, surface, texture);
 }
+
 
 ImageData::~ImageData()
 {
-    // TODO remove? printf("%s %d %p %p %p\n", __FUNCTION__, index, this, surface, texture);
     if (this->surface != nullptr) {
         SDL_FreeSurface(this->surface);
         this->surface = nullptr;
@@ -52,6 +51,7 @@ ImageData::~ImageData()
         this->texture = nullptr;
     }
 }
+
 
 std::shared_ptr<ImageData> ImageData::createImageFromCutout(const Rect<int32_t> & rect)
 {
@@ -70,6 +70,7 @@ std::shared_ptr<ImageData> ImageData::createImageFromCutout(const Rect<int32_t> 
     return image_cutout;
 }
 
+
 void ImageData::draw(int32_t x, int32_t y)
 {
     SDL_Rect r;
@@ -79,6 +80,7 @@ void ImageData::draw(int32_t x, int32_t y)
     r.h = this->h;
     SDL_RenderCopy(this->renderer, this->texture, NULL, &r);
 }
+
 
 void ImageData::loadFromFile(std::string filename)
 {
@@ -103,14 +105,14 @@ Frame::Frame(std::shared_ptr<ImageData> image)
 {
     this->image = image;
     this->index = g_frame_counter++;
-    // TODO remove printf("%s %d %p %p %p\n", __FUNCTION__, index, this, (void*)image.get());
 }
+
 
 Frame::~Frame()
 {
-    // TODO remove printf("%s %d %p %p %p\n", __FUNCTION__, index, this, (void*)image.get());
     this->image.reset();
 }
+
 
 void Frame::draw(int32_t x, int32_t y)
 {
@@ -149,6 +151,7 @@ void Sprite::setDrawPos(int32_t x, int32_t y)
     this->rect.pos.x = x;
     this->rect.pos.y = y;
 }
+
 
 void Sprite::setDrawPos(Vec2d<int32_t> v)
 {

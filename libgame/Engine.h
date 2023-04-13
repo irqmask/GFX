@@ -22,7 +22,7 @@ public:
     float msX;
     float msY;
 
-    static SDL_Renderer* getRenderer();
+    static SDL_Renderer* getRenderer(); //FIXME remove need to have public access to SDL renderer
     int32_t windowWidth() const  override;
     int32_t windowHeight() const override;
     void setScale(float scaleX, float scaleY) override;
@@ -51,6 +51,7 @@ private:
     float scaleX;
     float scaleY;
     SDL_Window *window;
+    SDL_Renderer* renderer;
     std::shared_ptr<Scene> current_scene;
     std::shared_ptr<Scene> next_scene;
     
