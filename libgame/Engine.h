@@ -27,6 +27,9 @@ public:
     int32_t windowHeight() const override;
     void setScale(float scaleX, float scaleY) override;
 
+    std::shared_ptr<ImageData> loadImage(const std::string &filename) const override;
+    std::shared_ptr<ImageData> copyImage(std::shared_ptr<ImageData> srcImage, const Rect<int32_t>& cutout) const override;
+
     void clearBackground(uint8_t r, uint8_t g, uint8_t b, uint8_t a) override;
     void setDrawForegroundColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) override;
     void drawPixel(int32_t x, int32_t y) override;
@@ -35,6 +38,9 @@ public:
     void drawFilledRect(int32_t x, int32_t y, int32_t w, int32_t h) override;
     void drawCircle(int32_t x, int32_t y, int32_t r) override;
     void drawFilledCircle(int32_t x, int32_t y, int32_t r) override;
+    void drawImage(int32_t x, int32_t y, std::shared_ptr<ImageData> image) override;
+    void drawFrame(int32_t x, int32_t y, std::shared_ptr<Frame> frame) override;
+    void drawSprite(std::shared_ptr<Sprite> sprite) override;
 
     float mouseX() override;
     float mouseY() override;

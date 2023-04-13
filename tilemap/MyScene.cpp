@@ -17,6 +17,7 @@ uint32_t MyScene::level0[MyScene::levelWidth * MyScene::levelHeight] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 };
 
+
 MyScene::MyScene(std::shared_ptr<Engine> engine)
     : Scene(engine)
     , mx(0)
@@ -24,19 +25,21 @@ MyScene::MyScene(std::shared_ptr<Engine> engine)
 {
     std::cout << __FUNCTION__ << std::endl;
     Path assetPath = Path::fromCurrentExecutable().plusPath("assets");
-    std::shared_ptr<ImageData> image = std::make_shared<ImageData>(assetPath.plusFilename("tiles_30x30_test.png"));
+    auto image = engine->loadImage(assetPath.plusFilename("tiles_30x30_test.png"));
 
-    tilemap = std::shared_ptr<TileMap>(new TileMap(image, tileWidth, tileHeight));
+    tilemap = std::shared_ptr<TileMap>(new TileMap(engine, image, tileWidth, tileHeight));
     tilemap->load(level0, levelWidth, levelHeight);
     Rect<int32_t> r(0, 0, 640, 480);
     tilemap->setDrawRect(r);
     font = std::shared_ptr<BitmapFont>(new BitmapFont(assetPath.plusFilename("font.png"), 9, 16, 20, 128));
 }
 
+
 MyScene::~MyScene()
 {
     std::cout << __FUNCTION__ << std::endl;
 }
+
 
 void MyScene::onEvent(SDL_Event& event)
 {
@@ -72,10 +75,12 @@ void MyScene::onEvent(SDL_Event& event)
     }
 }
 
+
 void MyScene::update(float elapsed)
 {
     (void)elapsed;
 }
+
 
 void MyScene::draw()
 {

@@ -1,9 +1,12 @@
+#include "Engine.h"
+
 #include <thread>
 
 #include <SDL_image.h>
 
-#include "Engine.h"
 #include "GameExceptions.h"
+#include "ImageData.h"
+#include "Sprite.h"
 
 // --- public members ---------------------------------------------------------
 
@@ -119,6 +122,49 @@ void Engine::setTitle(std::string title)
 }
 
 
+std::shared_ptr<ImageData> Engine::loadImage(const std::string& filename) const
+{
+    SDL_Surface *s = IMG_Load(filename.c_str());
+    if (s == nullptr) {
+        throw ResourceMissing(LOC, "Image file %s not found!", filename.c_str());
+    }
+
+    SDL_Texture *t = SDL_CreateTextureFromSurface(this->renderer, s);
+
+    int w = 0, h = 0;
+    int rc = SDL_QueryTexture(t, nullptr, nullptr, &w, &h);
+    if (rc != 0) {
+        throw OperationFailed(LOC, "Unable to query texture info: SDL Error %d %s", rc, SDL_GetError());
+    }
+    auto image = std::make_shared<ImageData>(w, h);
+    image->surface = s;
+    image->texture = t;
+    return image;
+}
+
+
+std::shared_ptr<ImageData> Engine::copyImage(std::shared_ptr<ImageData> srcImage, const Rect<int32_t>& cutout) const
+{
+    SDL_Rect source_rect = { cutout.pos.x, cutout.pos.y, cutout.size.x, cutout.size.y };
+
+    SDL_Surface* s = SDL_CreateRGBSurface(0, cutout.size.x, cutout.size.y,
+                                          srcImage->surface->format->BitsPerPixel,
+                                          srcImage->surface->format->Rmask,
+                                          srcImage->surface->format->Gmask,
+                                          srcImage->surface->format->Bmask,
+                                          srcImage->surface->format->Amask);
+
+    SDL_BlitSurface(srcImage->surface, &source_rect, s, nullptr);
+    SDL_Texture* t = SDL_CreateTextureFromSurface(renderer, s);
+
+    std::shared_ptr<ImageData> image_cutout = std::make_shared<ImageData>(cutout.size.x, cutout.size.y);
+    image_cutout->surface = s;
+    image_cutout->texture = t;
+
+    return image_cutout;
+}
+
+
 void Engine::clearBackground(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
     SDL_SetRenderDrawColor(renderer, r, g, b, a);
@@ -189,6 +235,29 @@ void Engine::drawFilledCircle(int32_t x, int32_t y, int32_t r)
         for (int32_t dx = -r; dx < r; dx++)
             if (dx*dx + dy*dy <= rr)
                 SDL_RenderDrawPoint(renderer, dx + x, dy + y);
+}
+
+
+void Engine::drawImage(int32_t x, int32_t y, std::shared_ptr<ImageData> image)
+{
+    SDL_Rect r;
+    r.x = x;
+    r.y = y;
+    r.w = image->width();
+    r.h = image->height();
+    SDL_RenderCopy(renderer, image->texture, NULL, &r);
+}
+
+
+void Engine::drawFrame(int32_t x, int32_t y, std::shared_ptr<Frame> frame)
+{
+    drawImage(x, y, frame->image());
+}
+
+
+void Engine::drawSprite(std::shared_ptr<Sprite> sprite)
+{
+    drawFrame(sprite->x(), sprite->y(), sprite->currentFrame());
 }
 
 

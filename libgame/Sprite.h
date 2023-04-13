@@ -4,35 +4,11 @@
 #include <memory>
 #include <vector>
 
-#include "Engine.h"
 #include "Rect.h"
 
 
-class ImageData
-{
-public:
-    ImageData(std::string filename);
-    ImageData(SDL_Surface *surface, SDL_Texture *texture, int32_t w, int32_t h);
-    ~ImageData();
-
-    int32_t getW() { return this->w; }
-    int32_t getH() { return this->h; }
-
-    std::shared_ptr<ImageData> createImageFromCutout(const Rect<int32_t> & rect);
-    void draw(int32_t x, int32_t y);
-
-private:
-    SDL_Renderer *renderer;
-    SDL_Surface *surface;
-    SDL_Texture *texture;
-    uint32_t pixelformat;
-    int32_t w;
-    int32_t h;
-    int32_t index;
-
-    ImageData();
-    void loadFromFile(std::string file_path);
-};
+class Engine;
+class ImageData;
 
 /// Frames are needed for animation of Sprites.
 /// One frame represents one picture of a movement.
@@ -43,11 +19,11 @@ public:
     Frame(std::shared_ptr<ImageData> image);
     ~Frame();
 
-    void draw(int32_t x, int32_t y);
+    std::shared_ptr<ImageData> image();
 
 private:
     int32_t index;
-    std::shared_ptr<ImageData> image;
+    std::shared_ptr<ImageData> img;
 };
 
 
@@ -57,7 +33,7 @@ private:
 class FrameSet : public std::vector<std::shared_ptr<Frame>>
 {
 public:
-    void loadFromImage(std::shared_ptr<ImageData> image, const std::vector<Rect<int32_t>> & frameRects);
+    void loadFromImage(std::shared_ptr<Engine> engine, std::shared_ptr<ImageData> image, const std::vector<Rect<int32_t>> & frameRects);
 };
 
 /// A Sprite is the display of an actor in the game, e.g. player or enemy.
@@ -79,9 +55,9 @@ public:
     void setDrawPos(Vec2d<int32_t> v);
 
     /// @returns current X-position of the sprite
-    int32_t getX();
+    int32_t x();
     /// @returns current Y-position of the sprite
-    int32_t getY();
+    int32_t y();
 
     const Vec2d<int32_t>& getDrawPos();
     const Rect<int32_t>& getDrawRect();
@@ -92,8 +68,9 @@ public:
     void setFramePos(uint16_t pos);
     void setFrameSet(uint16_t set);
 
+    std::shared_ptr<Frame> currentFrame();
+
     virtual void update(float elapsed);
-    virtual void draw();
 
     /// Calculate overlap between target and this sprite.
     /// @param[in]  target  Target rectangle to check

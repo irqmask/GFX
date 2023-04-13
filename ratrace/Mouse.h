@@ -24,7 +24,6 @@ public:
     Mouse(std::shared_ptr<Engine> engine, std::shared_ptr<ImageData> tileset, std::shared_ptr<TileMap> tm);
 
     virtual void update(float elapsed);
-    virtual void draw();
 
     const Vec2d<float> & getPos() const;
     void setPos(const Vec2d<float> & pos);

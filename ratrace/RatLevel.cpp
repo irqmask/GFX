@@ -6,6 +6,7 @@
 
 #include "BitmapFont.h"
 #include "Path.h"
+#include "ImageData.h"
 
 #include "Cheese.h"
 #include "EnemyMouse.h"
@@ -30,9 +31,9 @@ RatLevel::RatLevel(std::shared_ptr<Engine> engine)
     Path assetPath = Path::fromCurrentExecutable().plusPath("assets");
 
     font = std::shared_ptr<BitmapFont>(new BitmapFont(assetPath.plusFilename("font.png"), 9, 16, 20, 128));
-    std::shared_ptr<ImageData> image = std::make_shared<ImageData>(assetPath.plusFilename("ratrace.png"));
+    auto image = engine->loadImage(assetPath.plusFilename("ratrace.png"));
 
-    tilemap = std::shared_ptr<TileMap>(new TileMap(image, TILE_W, TILE_H));
+    tilemap = std::shared_ptr<TileMap>(new TileMap(engine, image, TILE_W, TILE_H));
     tilemap->load(level1, LEVEL_W, LEVEL_H);
     Rect<int32_t> mapviewrect;
     mapviewrect.pos.x = 5;
@@ -108,7 +109,6 @@ void RatLevel::update(float elapsed)
     tilemap->setCameraPos(camPos);
 
     mouse->setDrawPos(tilemap->getDrawPos(mouse->getPos()));
-
 }
 
 
@@ -119,13 +119,13 @@ void RatLevel::draw()
     tilemap->draw();
 
     for (auto cheese : cheeseList) {
-        cheese->draw();
+        drawSprite(cheese);
     }
 
-    mouse->draw();
+    drawSprite(mouse);
 
     for (auto emouse : enemyMiceList) {
-        emouse->draw();
+        drawSprite(emouse);
     }
 
     // debug output

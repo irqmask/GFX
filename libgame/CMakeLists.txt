@@ -18,6 +18,8 @@ set (libgame_SRCS
     Engine.cpp
     GameExceptions.h
     GameExceptions.cpp
+    ImageData.h
+    ImageData.cpp
     Path.h
     Path.cpp
     Rect.h

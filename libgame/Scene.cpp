@@ -34,6 +34,18 @@ void Scene::setScale(float scaleX, float scaleY)
 }
 
 
+std::shared_ptr<ImageData> Scene::loadImage(const std::string& filename) const
+{
+    return engine->loadImage(filename);
+}
+
+
+std::shared_ptr<ImageData> Scene::copyImage(std::shared_ptr<ImageData> srcImage, const Rect<int32_t>& cutout) const
+{
+    return engine->copyImage(srcImage, cutout);
+}
+
+
 void Scene::clearBackground(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
     engine->clearBackground(r, g, b, a);
@@ -79,6 +91,24 @@ void Scene::drawCircle(int32_t x, int32_t y, int32_t r)
 void Scene::drawFilledCircle(int32_t x, int32_t y, int32_t r)
 {
     engine->drawFilledCircle(x, y, r);
+}
+
+
+void Scene::drawImage(int32_t x, int32_t y, std::shared_ptr<ImageData> image)
+{
+    engine->drawImage(x, y, image);
+}
+
+
+void Scene::drawFrame(int32_t x, int32_t y, std::shared_ptr<Frame> frame)
+{
+    engine->drawFrame(x, y, frame);
+}
+
+
+void Scene::drawSprite(std::shared_ptr<Sprite> sprite)
+{
+    engine->drawSprite(sprite);
 }
 
 

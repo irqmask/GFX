@@ -20,7 +20,7 @@ MyScene::MyScene(std::shared_ptr<Engine> engine)
     , highscore(0)
 {
     Path assetPath = Path::fromCurrentExecutable().plusPath("assets");
-    background = std::make_shared<ImageData>(assetPath.plusFilename("background.png"));
+    background = engine->loadImage(assetPath.plusFilename("background.png"));
     font = std::shared_ptr<BitmapFont>(new BitmapFont(assetPath.plusFilename("font.png"), 9, 16, 20, 128));
 
     for (int32_t y = 0; y < FIELD_HEIGHT; y++) {
@@ -121,7 +121,7 @@ void MyScene::draw()
 {
     clearBackground(0, 0, 0, 255);
 
-    background->draw(0, 0);
+    drawImage(0, 0, background);
     drawField();
 
     // draw next

@@ -23,19 +23,19 @@ Mouse::Mouse(std::shared_ptr<Engine> engine, std::shared_ptr<ImageData> tileset,
     , tilemap(tm)
 {
     std::shared_ptr<FrameSet> fs_up = std::make_shared<FrameSet>();   
-    fs_up->loadFromImage(tileset, FRAMES_UP);
+    fs_up->loadFromImage(engine, tileset, FRAMES_UP);
     addFrameSet(0, fs_up);
 
     std::shared_ptr<FrameSet> fs_right = std::make_shared<FrameSet>();
-    fs_right->loadFromImage(tileset, FRAMES_RIGHT);
+    fs_right->loadFromImage(engine, tileset, FRAMES_RIGHT);
     addFrameSet(1, fs_right);
 
     std::shared_ptr<FrameSet> fs_down = std::make_shared<FrameSet>();
-    fs_down->loadFromImage(tileset, FRAMES_DOWN);
+    fs_down->loadFromImage(engine, tileset, FRAMES_DOWN);
     addFrameSet(2, fs_down);
 
     std::shared_ptr<FrameSet> fs_left = std::make_shared<FrameSet>();
-    fs_left->loadFromImage(tileset, FRAMES_LEFT);
+    fs_left->loadFromImage(engine, tileset, FRAMES_LEFT);
     addFrameSet(3, fs_left);
 }
 
@@ -126,24 +126,6 @@ void Mouse::update(float elapsed)
     } else {
         setDirection(Mouse::DIR_NONE); // stop
     }
-}
-
-
-void Mouse::draw()
-{
-    Sprite::draw();
-
-    /*
-    engine->setDrawForegroundColor(255, 200, 0, 255);
-    int32_t x = this->tilemapPos.x * this->tilemap->getTileWidth();
-    int32_t y = this->tilemapPos.y * this->tilemap->getTileHeight();
-    engine->drawRect(5 + x, 5 + y, this->tilemap->getTileWidth(), this->tilemap->getTileHeight());
-
-    engine->setDrawForegroundColor(255, 0, 0, 255);
-    x = this->nextPos.x * tilemap->getTileWidth();
-    y = this->nextPos.y * tilemap->getTileHeight();
-    engine->drawRect(6 + x, 6 + y, tilemap->getTileWidth() - 2, tilemap->getTileHeight() - 2);
-    */
 }
 
 

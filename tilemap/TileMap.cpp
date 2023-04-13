@@ -1,25 +1,28 @@
 #include "TileMap.h"
 
+#include "EngineInterface.h"
+#include "ImageData.h"
 #include "Sprite.h"
 
-TileMap::TileMap(std::shared_ptr<ImageData> tileset,
+TileMap::TileMap(std::shared_ptr<EngineInterface> engine, std::shared_ptr<ImageData> tileset,
                  int32_t tile_width, int32_t tile_height)
     : tileWidth(tile_width)
     , tileHeight(tile_height)
     , width(0)
     , height(0)
     , mapData(nullptr)
+    , engine(engine)
 {
     frameSet = std::make_shared<FrameSet>();
 
-    int tiles_in_row = tileset->getH() / tile_height;
-    int tiles_in_column = tileset->getW() / tile_width;
+    int tiles_in_row = tileset->height() / tile_height;
+    int tiles_in_column = tileset->width() / tile_width;
 
     // load map tile graphics
     for (int row = 0; row < tiles_in_row; row++) {
         for (int column = 0; column < tiles_in_column; column++) {
             Rect<int32_t> r(column * tile_height, row * tile_width, tile_height, tile_width);
-            auto f = std::make_shared<Frame>(tileset->createImageFromCutout(r));
+            auto f = std::make_shared<Frame>(engine->copyImage(tileset, r));
             frameSet->push_back(f);
         }
     }
@@ -126,7 +129,7 @@ void TileMap::draw()
                 uint32_t tile = this->mapData[ty * this->width + tx];
                 std::shared_ptr<Frame> frame = tileLookup[tile];
                 if (frame != nullptr)
-                    frame->draw(x * tileWidth - rx, y * tileHeight - ry);
+                    engine->drawFrame(x * tileWidth - rx, y * tileHeight - ry, frame);
             }
         }
     }

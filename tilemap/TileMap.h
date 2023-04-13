@@ -6,6 +6,8 @@
 
 #include "Sprite.h"
 
+class EngineInterface;
+
 class TileMap
 {
 public:
@@ -13,11 +15,12 @@ public:
 
     ///
     /// \brief TileMap
+    /// \param[in] engine       Engine or scene where this TileMap will be used in
     /// \param[in] tileset      Tileset image to load map tiles from
     /// \param[in] tile_width   Tile width in pixels
     /// \param[in] tile_height  Tile Height in pixels
     ///
-    TileMap(std::shared_ptr<ImageData> tileset,
+    TileMap(std::shared_ptr< EngineInterface> engine, std::shared_ptr<ImageData> tileset,
             int32_t tile_width, int32_t tile_height);
     ~TileMap();
 
@@ -75,8 +78,7 @@ protected:
     std::shared_ptr<FrameSet> frameSet;
     tiletype_t* mapData;
     std::map<int32_t, std::shared_ptr<Frame>> tileLookup;
-
-    SDL_Renderer* renderer;
+    std::shared_ptr<EngineInterface> engine;
 };
 
 #endif // TILEMAP_H
