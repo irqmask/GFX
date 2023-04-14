@@ -15,6 +15,7 @@ public:
     virtual ~Engine();
 
     static constexpr float PI = 3.14159265358979323846f;
+    static constexpr float DESIRED_FPS = 200.0f;
 
     float elapsed;
     float fps;
@@ -56,6 +57,7 @@ private:
     int32_t h;
     float scaleX;
     float scaleY;
+    float ticks_per_frame = 1000.0f / DESIRED_FPS;
     SDL_Window *window;
     SDL_Renderer* renderer;
     std::shared_ptr<Scene> current_scene;

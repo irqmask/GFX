@@ -83,9 +83,6 @@ void Engine::run()
         float one_second = 0.0;
         int frames = 0;
         do {
-            ticks = SDL_GetTicks();
-            this->elapsed = (ticks - last_ticks) / 1000.0f;
-
             SDL_Event event;
             while (SDL_PollEvent(&event)) {
                 if (event.type == SDL_MOUSEMOTION) {
@@ -102,6 +99,22 @@ void Engine::run()
             running = this->current_scene->isRunning();
 
             frames++;
+
+            // free unnecessary CPU time
+            ticks = SDL_GetTicks();
+            uint32_t elapsed_ticks = ticks - last_ticks;
+            if (elapsed_ticks < ticks_per_frame) {
+                SDL_Delay((uint32_t)ticks_per_frame - elapsed_ticks);
+            }
+            else {
+                SDL_Delay(0);
+            }
+
+            // calculate elapsed again, after sleeping
+            ticks = SDL_GetTicks();
+            this->elapsed = (ticks - last_ticks) / 1000.0f;
+            last_ticks = ticks;
+
             one_second += this->elapsed;
             if (one_second >= 1.0) {
                 this->fps = frames / one_second;
@@ -109,8 +122,6 @@ void Engine::run()
                 frames = 0;
                 setTitle(title + " " + std::to_string(fps) + " fps");
             }
-            last_ticks = ticks;
-            std::this_thread::yield();
         } while (running);
     }
 }
