@@ -189,28 +189,3 @@ void TileMap::setCameraPos(Vec2d<float> pos)
 {
     cameraPos = pos;
 }
-
-/*
-Vec2d<float> TileMap::getPosInMap(Vec2d<float> screenPos)
-{
-    screenPos.x -= this->drawRect.pos.x;
-    screenPos.y -= this->drawRect.pos.y;
-
-    return screenPos;
-}
-
-Vec2d<int32_t> TileMap::getTilePosInMap(Vec2d<float> screenPos)
-{
-    screenPos.x -= this->drawRect.pos.x;
-    screenPos.x /= (float)this->tileWidth;
-    //screenPos.x += 0.5f; // round
-    screenPos.y -= this->drawRect.pos.y;
-    screenPos.y /= (float)this->tileHeight;
-    //screenPos.y += 0.5f; // round
-    Vec2d<int> tilePos;
-    tilePos.x = static_cast<int32_t>(screenPos.x);
-    tilePos.y = static_cast<int32_t>(screenPos.y);
-
-    return tilePos;
-}
-*/
