@@ -81,11 +81,11 @@ private:
 
 };
 
-class MyScene : public Scene
+class JoystickTest : public Engine
 {
 public:
-    MyScene(std::shared_ptr<Engine> engine);
-    virtual ~MyScene();
+    JoystickTest();
+    virtual ~JoystickTest();
 
     virtual void onEvent(SDL_Event& event) override;
     virtual void update(float elapsed) override;

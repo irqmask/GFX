@@ -1,24 +1,24 @@
-#include "MyScene.h"
+#include "JoystickTest.h"
 
 #include <iostream>
 
 #include "Path.h"
 
-MyScene::MyScene(std::shared_ptr<Engine> engine)
-    : Scene(engine)
+JoystickTest::JoystickTest()
+    : Engine("joysticktest", 640, 480)
 {
     Path assetPath = Path::fromCurrentExecutable().plusPath("assets");
     font = std::shared_ptr<BitmapFont>(new BitmapFont(assetPath.plusFilename("font.png"), 9, 16, 20, 128));
     detectJoysticks();
 }
 
-MyScene::~MyScene()
+JoystickTest::~JoystickTest()
 {
     std::cout << __FUNCTION__ << std::endl;
     font.reset();
 }
 
-void MyScene::detectJoysticks()
+void JoystickTest::detectJoysticks()
 {
     openedJoysticks.clear();
     int32_t num_joysticks = SDL_NumJoysticks();
@@ -28,7 +28,7 @@ void MyScene::detectJoysticks()
     }
 }
 
-void MyScene::printJoystickInfo(int32_t x, int32_t y, int32_t joyidx)
+void JoystickTest::printJoystickInfo(int32_t x, int32_t y, int32_t joyidx)
 {
     setDrawForegroundColor(200, 255, 200, 255);
     drawLine(x, y + 10, x, y + 50);
@@ -38,7 +38,7 @@ void MyScene::printJoystickInfo(int32_t x, int32_t y, int32_t joyidx)
     font->print(x, y + 40, "  numBalls   " + std::to_string(openedJoysticks.at(joyidx)->numBalls()));
 }
 
-void MyScene::drawJoystickStateDigital(int32_t x, int32_t y, int32_t joyidx)
+void JoystickTest::drawJoystickStateDigital(int32_t x, int32_t y, int32_t joyidx)
 {
     setDrawForegroundColor(255, 200, 200, 255);
     std::shared_ptr<Joystick> j = openedJoysticks.at(joyidx);
@@ -65,7 +65,7 @@ void MyScene::drawJoystickStateDigital(int32_t x, int32_t y, int32_t joyidx)
     }
 }
 
-void MyScene::drawJoystickButtonState(int32_t x, int32_t y, int32_t joyidx)
+void JoystickTest::drawJoystickButtonState(int32_t x, int32_t y, int32_t joyidx)
 {
     std::shared_ptr<Joystick> j = openedJoysticks.at(joyidx);
     for (int32_t i=0; i<j->numButtons(); i++) {
@@ -76,10 +76,8 @@ void MyScene::drawJoystickButtonState(int32_t x, int32_t y, int32_t joyidx)
     }
 }
 
-void MyScene::onEvent(SDL_Event& event)
+void JoystickTest::onEvent(SDL_Event& event)
 {
-    Scene::onEvent(event);
-
     if (event.type == SDL_KEYDOWN) {
         switch (event.key.keysym.sym) {
         case SDLK_F5:
@@ -92,12 +90,12 @@ void MyScene::onEvent(SDL_Event& event)
     }
 }
 
-void MyScene::update(float elapsed)
+void JoystickTest::update(float elapsed)
 {
     (void)elapsed;
 }
 
-void MyScene::draw()
+void JoystickTest::draw()
 {
     clearBackground(0, 0, 64, 255);
 

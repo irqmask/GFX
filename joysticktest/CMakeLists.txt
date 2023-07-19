@@ -15,14 +15,17 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${BUILD_DIR_POSTFIX} CACHE STRING "Do not change this setting." FORCE)
         
-set(joysticktest_SRC
-    MyScene.h
-    MyScene.cpp
+set(${PROJECT_NAME}_SRC
+    JoystickTest.h
+    JoystickTest.cpp
     main.cpp
 )
 
-include_directories(${PROJECT_SOURCE_DIR}/../libgame ${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS})
+include_directories(${PROJECT_SOURCE_DIR}
+                    ${PROJECT_SOURCE_DIR}/../libgame
+                    ${SDL2_INCLUDE_DIRS}
+                    ${SDL2IMAGE_INCLUDE_DIRS})
 
-add_executable(joysticktest ${joysticktest_SRC})
+add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_SRC})
 
-target_link_libraries(joysticktest libgame ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} libgame ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})

@@ -64,69 +64,6 @@ void Engine::setScale(float scaleX, float scaleY)
 }
 
 
-void Engine::setNextScene(std::shared_ptr<Scene> scene)
-{
-    this->next_scene = scene;   
-}
-
-
-void Engine::run()
-{
-    while (this->next_scene != nullptr) {
-        // TODO remove? std::cout << "Engine entering next scene" << std::endl;
-        
-        this->current_scene = this->next_scene;
-        this->next_scene = nullptr;
-        
-        bool running = false;
-        uint32_t ticks = 0, last_ticks = SDL_GetTicks();
-        float one_second = 0.0;
-        int frames = 0;
-        do {
-            SDL_Event event;
-            while (SDL_PollEvent(&event)) {
-                if (event.type == SDL_MOUSEMOTION) {
-                    this->msX = (float)event.motion.x / this->scaleX;
-                    this->msY = (float)event.motion.y / this->scaleY;
-                }
-                this->current_scene->onEvent(event);
-            }
-            this->current_scene->update(this->elapsed);
-            this->current_scene->draw();
-
-            SDL_RenderPresent(renderer);
-
-            running = this->current_scene->isRunning();
-
-            frames++;
-
-            // free unnecessary CPU time
-            ticks = SDL_GetTicks();
-            uint32_t elapsed_ticks = ticks - last_ticks;
-            if (elapsed_ticks < ticks_per_frame) {
-                SDL_Delay((uint32_t)ticks_per_frame - elapsed_ticks);
-            }
-            else {
-                SDL_Delay(0);
-            }
-
-            // calculate elapsed again, after sleeping
-            ticks = SDL_GetTicks();
-            this->elapsed = (ticks - last_ticks) / 1000.0f;
-            last_ticks = ticks;
-
-            one_second += this->elapsed;
-            if (one_second >= 1.0) {
-                this->fps = frames / one_second;
-                one_second = 0.0; 
-                frames = 0;
-                setTitle(title + " " + std::to_string(fps) + " fps");
-            }
-        } while (running);
-    }
-}
-
-
 void Engine::setTitle(std::string title)
 {
     SDL_SetWindowTitle(this->window, title.c_str());
@@ -282,6 +219,138 @@ float Engine::mouseY()
 {
     return msY;
 }
+
+
+void Engine::setNextScene(std::shared_ptr<Scene> scene)
+{
+    this->next_scene = scene;
+}
+
+
+void Engine::onEvent(SDL_Event& event)
+{
+    (void)event;
+}
+
+
+void Engine::update(float elapsed)
+{
+    (void)elapsed;
+}
+
+
+void Engine::draw()
+{
+}
+
+
+void Engine::run()
+{
+    bool running = true;
+    uint32_t ticks = 0, last_ticks = SDL_GetTicks();
+    float one_second = 0.0;
+    int frames = 0;
+    do {
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                running = false;
+            }
+            if (event.type == SDL_MOUSEMOTION) {
+                this->msX = (float)event.motion.x / this->scaleX;
+                this->msY = (float)event.motion.y / this->scaleY;
+            }
+            this->onEvent(event);
+        }
+        this->update(this->elapsed);
+        this->draw();
+
+        SDL_RenderPresent(renderer);
+
+        frames++;
+
+        // free unnecessary CPU time
+        ticks = SDL_GetTicks();
+        uint32_t elapsed_ticks = ticks - last_ticks;
+        if (elapsed_ticks < ticks_per_frame) {
+            SDL_Delay((uint32_t)ticks_per_frame - elapsed_ticks);
+        }
+        else {
+            SDL_Delay(0);
+        }
+
+        // calculate elapsed again, after sleeping
+        ticks = SDL_GetTicks();
+        this->elapsed = (ticks - last_ticks) / 1000.0f;
+        last_ticks = ticks;
+
+        one_second += this->elapsed;
+        if (one_second >= 1.0) {
+            this->fps = frames / one_second;
+            one_second = 0.0;
+            frames = 0;
+            setTitle(title + " " + std::to_string(fps) + " fps");
+        }
+    } while (running);
+}
+
+
+void Engine::runScene()
+{
+    while (this->next_scene != nullptr) {
+        // TODO remove? std::cout << "Engine entering next scene" << std::endl;
+
+        this->current_scene = this->next_scene;
+        this->next_scene = nullptr;
+
+        bool running = false;
+        uint32_t ticks = 0, last_ticks = SDL_GetTicks();
+        float one_second = 0.0;
+        int frames = 0;
+        do {
+            SDL_Event event;
+            while (SDL_PollEvent(&event)) {
+                if (event.type == SDL_MOUSEMOTION) {
+                    this->msX = (float)event.motion.x / this->scaleX;
+                    this->msY = (float)event.motion.y / this->scaleY;
+                }
+                this->current_scene->onEvent(event);
+            }
+            this->current_scene->update(this->elapsed);
+            this->current_scene->draw();
+
+            SDL_RenderPresent(renderer);
+
+            running = this->current_scene->isRunning();
+
+            frames++;
+
+            // free unnecessary CPU time
+            ticks = SDL_GetTicks();
+            uint32_t elapsed_ticks = ticks - last_ticks;
+            if (elapsed_ticks < ticks_per_frame) {
+                SDL_Delay((uint32_t)ticks_per_frame - elapsed_ticks);
+            }
+            else {
+                SDL_Delay(0);
+            }
+
+            // calculate elapsed again, after sleeping
+            ticks = SDL_GetTicks();
+            this->elapsed = (ticks - last_ticks) / 1000.0f;
+            last_ticks = ticks;
+
+            one_second += this->elapsed;
+            if (one_second >= 1.0) {
+                this->fps = frames / one_second;
+                one_second = 0.0;
+                frames = 0;
+                setTitle(title + " " + std::to_string(fps) + " fps");
+            }
+        } while (running);
+    }
+}
+
 
 // --- private members --------------------------------------------------------
 

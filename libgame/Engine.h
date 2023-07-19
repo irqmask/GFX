@@ -46,11 +46,19 @@ public:
     float mouseX() override;
     float mouseY() override;
 
+    void setTitle(std::string title) override;
+
     void run();
+    void runScene();
     void setNextScene(std::shared_ptr<Scene> scene);
 
-    void setTitle(std::string title);
-    
+
+    virtual void onEvent(SDL_Event& event);
+
+    virtual void update(float elapsed);
+    virtual void draw();
+
+
 private:
     std::string title;
     int32_t w;
