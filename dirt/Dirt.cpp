@@ -6,7 +6,8 @@
 
 // --- public members ---------------------------------------------------------
 
-DirtScene::DirtScene(std::shared_ptr<Engine> engine) : Scene(engine)
+Dirt::Dirt()
+    : Engine("dirt", 320, 240)
 {
     std::cout << __FUNCTION__ << std::endl;
     this->data = (bool*)calloc((size_t)(windowWidth() * windowHeight()), sizeof(bool));
@@ -14,7 +15,7 @@ DirtScene::DirtScene(std::shared_ptr<Engine> engine) : Scene(engine)
 }
 
 
-DirtScene::~DirtScene()
+Dirt::~Dirt()
 {
     std::cout << __FUNCTION__ << std::endl;
     if (this->data != nullptr) {
@@ -23,10 +24,8 @@ DirtScene::~DirtScene()
     }
 }
 
-void DirtScene::onEvent(SDL_Event& event)
+void Dirt::onEvent(SDL_Event& event)
 {
-    Scene::onEvent(event);
-
     if (event.type == SDL_MOUSEBUTTONDOWN) {
         if (event.button.button == SDL_BUTTON_LEFT) {
             putBlob(event.button.x, event.button.y, randInt(15, 30));
@@ -34,11 +33,12 @@ void DirtScene::onEvent(SDL_Event& event)
     }
 }
 
-void DirtScene::update(float elapsed)
+void Dirt::update(float elapsed)
 {
+    (void)elapsed;
 }
 
-void DirtScene::draw()
+void Dirt::draw()
 {
     bool particles_moved;
     
@@ -54,7 +54,7 @@ void DirtScene::draw()
 
 // --- private members --------------------------------------------------------
 
-uint8_t DirtScene::randUInt8(uint8_t s, uint8_t e)
+uint8_t Dirt::randUInt8(uint8_t s, uint8_t e)
 {
     double val;
 
@@ -67,7 +67,7 @@ uint8_t DirtScene::randUInt8(uint8_t s, uint8_t e)
     return (uint8_t)(val);
 }
 
-int DirtScene::randInt(int s, int e)
+int Dirt::randInt(int s, int e)
 {
     double val;
     
@@ -78,7 +78,7 @@ int DirtScene::randInt(int s, int e)
     return (int)(val);
 }
 
-void DirtScene::putBlob(int cx, int cy, int r)
+void Dirt::putBlob(int cx, int cy, int r)
 {
     int32_t xx, yy;
 
@@ -99,7 +99,7 @@ void DirtScene::putBlob(int cx, int cy, int r)
     }
 }
 
-void DirtScene::putPixel(int x, int y, bool pixel)
+void Dirt::putPixel(int x, int y, bool pixel)
 {
     if (pixel)
         setDrawForegroundColor(x / 2 % 255, 0, 240, 255);
@@ -109,7 +109,7 @@ void DirtScene::putPixel(int x, int y, bool pixel)
     drawPixel(x, y);
 }
 
-bool DirtScene::advanceAndDrawLines()
+bool Dirt::advanceAndDrawLines()
 {    
     bool particles_moved = false;
     

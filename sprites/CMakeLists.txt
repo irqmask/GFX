@@ -16,8 +16,8 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${BUILD_DIR_POSTFIX} CACHE STRING "Do not change this setting." FORCE)
         
 set(sprites_SRC
-    MyScene.h
-    MyScene.cpp
+    SpriteDemo.h
+    SpriteDemo.cpp
     main.cpp
 )
 

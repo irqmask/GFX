@@ -15,7 +15,7 @@ int main(void)
     std::shared_ptr<RatLevel> spritescene = std::make_shared<RatLevel>(engine);
 
     engine->setNextScene(spritescene);
-    engine->run();
+    engine->runScene();
     
     spritescene.reset();
     engine.reset();

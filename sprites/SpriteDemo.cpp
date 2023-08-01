@@ -1,11 +1,11 @@
-#include "MyScene.h"
+#include "SpriteDemo.h"
 
 #include <iostream>
 
 #include "Engine.h"
 #include "Path.h"
 
-MyScene::MyScene(std::shared_ptr<Engine> engine)
+SpriteDemo::SpriteDemo(std::shared_ptr<Engine> engine)
     : Scene(engine)
 {
     Path assetPath = Path::fromCurrentExecutable().plusPath("assets");
@@ -44,13 +44,13 @@ MyScene::MyScene(std::shared_ptr<Engine> engine)
     setDrawForegroundColor(255, 0, 0, 255);
 }
 
-MyScene::~MyScene()
+SpriteDemo::~SpriteDemo()
 {
     std::cout << __FUNCTION__ << std::endl;
     sprite.reset();
 }
 
-void MyScene::onEvent(SDL_Event& event)
+void SpriteDemo::onEvent(SDL_Event& event)
 {
     Scene::onEvent(event);
 
@@ -74,12 +74,12 @@ void MyScene::onEvent(SDL_Event& event)
     }
 }
 
-void MyScene::update(float elapsed)
+void SpriteDemo::update(float elapsed)
 {
     sprite->increaseFrame(elapsed);
 }
 
-void MyScene::draw()
+void SpriteDemo::draw()
 {
     clearBackground(255, 0, 0, 255);
     drawSprite(sprite);

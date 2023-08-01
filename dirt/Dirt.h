@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Scene.h"
+#include "Engine.h"
 
-class DirtScene : public Scene
+class Dirt : public Engine
 {
 public:
-    DirtScene(std::shared_ptr<Engine> renderer);
-    virtual ~DirtScene();
+    Dirt();
+    virtual ~Dirt();
 
     virtual void onEvent(SDL_Event& event) override;
     virtual void update(float elapsed) override;

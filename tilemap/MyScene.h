@@ -8,11 +8,11 @@
 #include "BitmapFont.h"
 #include "TileMap.h"
 
-class MyScene : public Scene
+class SpriteDemo : public Scene
 {
 public:
-    MyScene(std::shared_ptr<Engine> engine);
-    virtual ~MyScene();
+    SpriteDemo(std::shared_ptr<Engine> engine);
+    virtual ~SpriteDemo();
 
     virtual void onEvent(SDL_Event& event) override;
     virtual void update(float elapsed) override;

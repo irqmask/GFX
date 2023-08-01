@@ -2,21 +2,14 @@
 
 #include <string>
 
-#include "Engine.h"
 #include "Dirt.h"
 
-static const std::string appName = "dirt";
 
 int main(void)
 {
-    std::shared_ptr<Engine> engine = std::make_shared<Engine>(appName, 500, 200);
+    auto dirt = std::make_shared<Dirt>();
     
-    std::shared_ptr<DirtScene> dirtscene = std::make_shared<DirtScene>(engine);
-    
-    engine->setNextScene(dirtscene);
-    engine->run();
-    
-    dirtscene.reset();   
-    engine.reset();
+    dirt->run();
+    dirt.reset();
     return 0;
 }

@@ -16,10 +16,10 @@ int main(void)
 
     std::shared_ptr<Engine> engine = std::make_shared<Engine>(appName, 480, 640);
 
-    std::shared_ptr<MyScene> spritescene = std::make_shared<MyScene>(engine);
+    std::shared_ptr<SpriteDemo> spritescene = std::make_shared<SpriteDemo>(engine);
 
     engine->setNextScene(spritescene);
-    engine->run();
+    engine->runScene();
 
     spritescene.reset();
     engine.reset();
