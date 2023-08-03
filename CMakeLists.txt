@@ -45,6 +45,7 @@ add_subdirectory(libgame)
 
 add_subdirectory(dirt)
 add_subdirectory(joysticktest)
+add_subdirectory(maze)
 add_subdirectory(ratrace)
 add_subdirectory(sprites)
 add_subdirectory(tetris)

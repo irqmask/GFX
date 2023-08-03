@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 template <class T>
 class Vec2d
 {
@@ -10,7 +12,8 @@ public:
     T y;
 };
 
-
+typedef Vec2d<int32_t> Vec2I32;
+typedef Vec2d<float> Vec2Flt;
 
 template <class T>
 class Rect
