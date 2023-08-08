@@ -10,9 +10,10 @@
 // --- public members ---------------------------------------------------------
 
 Maze::Maze()
-    : Engine("dirt", 640, 480)
+    : Engine("mazedemo", 640, 480)
     , interval(0.0f)
     , drawIt(false)
+    , finished(false)
 {
     std::cout << __FUNCTION__ << std::endl;    
     srand((int)std::time(0));
@@ -24,7 +25,9 @@ Maze::Maze()
     memset(maze,
            CELL_WALL_TOP | CELL_WALL_RIGHT | CELL_WALL_BOTTOM | CELL_WALL_LEFT,
            rows * columns);
-    visit(Vec2I32(0, 0)); // set starting point
+    startPos = Vec2I32(rand() % columns, rand() % rows);
+    endPos = Vec2I32(-1, -1);
+    visit(startPos); // set starting point
 }
 
 
@@ -44,25 +47,27 @@ void Maze::onEvent(SDL_Event& event)
 void Maze::update(float elapsed)
 {
     interval += elapsed;
-    if (interval < 0.1f)
+    if (interval < 0.05f)
     {
         return;
     }
-    interval -= 0.1f;
+    interval -= 0.05f;
 
-    std::vector<Vec2I32> neighbors = findUnvisitedNeigbors(places.top());
-    if (neighbors.size()) {
-        int32_t nextNeighbor = rand() % neighbors.size();
-        std::cout << "nextNeighbor " << nextNeighbor << std::endl;
-        visit(neighbors[nextNeighbor]);
-    }
-    else
-    {
-        while(findUnvisitedNeigbors(places.top()).size() == 0 && places.size() > 0) {
-            places.pop();
+    if (places.size() > 0) {
+        std::vector<Vec2I32> neighbors = findUnvisitedNeigbors(places.top());
+        if (neighbors.size()) {
+            int32_t nextNeighbor = rand() % neighbors.size();
+            visit(neighbors[nextNeighbor]);
+        }
+        else {
+            while(places.size() > 0 && findUnvisitedNeigbors(places.top()).size() == 0) {
+                places.pop();
+            }
         }
     }
-
+    else {
+        finished = true;
+    }
     drawIt = true;
 }
 
@@ -72,7 +77,7 @@ void Maze::draw()
     if (!drawIt)
         return;
 
-    clearBackground(0, 32, 128, 0);
+    clearBackground(32, 64, 128, 0);
 
     for (int32_t y = 0; y < rows; y++) {
         for (int32_t x = 0; x < columns; x++) {
@@ -94,11 +99,22 @@ void Maze::draw()
             if (walls & CELL_WALL_LEFT)
                 drawLine(x * CELL_SIZE, y * CELL_SIZE, x * CELL_SIZE, (y + 1) * CELL_SIZE - 1);
 
-            if (x == places.top().x && y == places.top().y) {
-                setDrawForegroundColor(0, 255, 0, 255);
-                drawFilledRect(x * CELL_SIZE + 1, y * CELL_SIZE + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+            if (places.size() > 0) {
+                if (x == places.top().x && y == places.top().y) {
+                    setDrawForegroundColor(255, 255, 0, 255);
+                    drawFilledRect(x * CELL_SIZE + 1, y * CELL_SIZE + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+                }
             }
         }
+    }
+    // draw start position
+    setDrawForegroundColor(0, 255, 0, 255);
+    drawFilledRect(startPos.x * CELL_SIZE + 1, startPos.y * CELL_SIZE + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+
+    // draw end position
+    if (finished) {
+        setDrawForegroundColor(255, 0, 0, 255);
+        drawFilledRect(endPos.x * CELL_SIZE + 1, endPos.y * CELL_SIZE + 1, CELL_SIZE - 2, CELL_SIZE - 2);
     }
 }
 
@@ -198,5 +214,6 @@ void Maze::visit(const Vec2I32 &coord)
         maze[coord.y * columns + coord.x] |= CELL_VISITED;
         if (places.size()) tearDownWalls(places.top(), coord);
         places.push(coord);
+        endPos = coord;
     }
 }
