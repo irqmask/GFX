@@ -28,8 +28,9 @@ private:
     static constexpr int32_t CELL_SIZE = 32;
 
     float interval;
-    bool drawIt;
+    bool drawIt, finished;
     int32_t rows, columns;
+    Vec2I32 startPos, endPos;
     std::stack<Vec2I32> places;
     uint8_t *maze;
 
