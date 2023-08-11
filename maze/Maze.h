@@ -39,4 +39,5 @@ private:
     void visit(const Vec2I32 &coord);
     void tearDownWalls(const Vec2I32 &from, const Vec2I32 &to);
     std::vector<Vec2I32> findUnvisitedNeigbors(const Vec2I32 &coord) const;
+    void restart();
 };
