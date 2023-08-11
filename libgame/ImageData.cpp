@@ -25,7 +25,7 @@ ImageData::ImageData(int32_t w, int32_t h)
     : surface(nullptr)
     , texture(nullptr)
     , w(w)
-    , h(w)
+    , h(h)
 {
     this->index = g_image_counter++;
 }
