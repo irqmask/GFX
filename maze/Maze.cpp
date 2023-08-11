@@ -18,8 +18,8 @@ Maze::Maze()
     std::cout << __FUNCTION__ << std::endl;    
     srand((int)std::time(0));
 
-    rows = this->windowHeight() / CELL_SIZE;
-    columns = this->windowWidth() / CELL_SIZE;
+    rows = this->getScaledHeight() / CELL_SIZE;
+    columns = this->getScaledWidth() / CELL_SIZE;
     std::cout << "Generating a " << columns << " x " << rows << " maze." << std::endl;
     maze = new uint8_t[rows * columns];
     memset(maze,
@@ -40,15 +40,15 @@ Maze::~Maze()
 
 void Maze::onEvent(SDL_Event& event)
 {
-    (void)event;
+    if (event.key.state == SDL_RELEASED && event.key.keysym.scancode == SDL_SCANCODE_F5)
+        restart();
 }
 
 
 void Maze::update(float elapsed)
 {
     interval += elapsed;
-    if (interval < 0.05f)
-    {
+    if (interval < 0.05f) {
         return;
     }
     interval -= 0.05f;
@@ -85,8 +85,6 @@ void Maze::draw()
             setDrawForegroundColor(255, 255, 255, 255);
             if (isVisited(Vec2I32(x, y)))
                 drawFilledRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-//            else
-//                drawRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 
             setDrawForegroundColor(0, 0, 0, 255);
             uint8_t walls = maze[y * columns + x];
@@ -216,4 +214,18 @@ void Maze::visit(const Vec2I32 &coord)
         places.push(coord);
         endPos = coord;
     }
+}
+
+
+void Maze::restart()
+{
+    memset(maze,
+           CELL_WALL_TOP | CELL_WALL_RIGHT | CELL_WALL_BOTTOM | CELL_WALL_LEFT,
+           rows * columns);
+    while (places.size()) {
+        places.pop();
+    }
+    startPos = Vec2I32(rand() % columns, rand() % rows);
+    endPos = Vec2I32(-1, -1);
+    visit(startPos); // set starting point
 }
