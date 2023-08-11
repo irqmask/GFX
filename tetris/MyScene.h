@@ -9,11 +9,11 @@
 typedef std::vector<Vec2d<int32_t>> Tetromino;
 typedef std::vector<Tetromino> TetrominoSprite;
 
-class SpriteDemo : public Scene
+class Tetris : public Scene
 {
 public:
-    SpriteDemo(std::shared_ptr<Engine> engine);
-    virtual ~SpriteDemo();
+    Tetris(std::shared_ptr<Engine> engine);
+    virtual ~Tetris();
 
     virtual void onEvent(SDL_Event& event) override;
     virtual void update(float elapsed) override;

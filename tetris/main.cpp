@@ -5,7 +5,6 @@
 
 #include "Engine.h"
 #include "MyScene.h"
-#include "Sprite.h"
 
 static const std::string appName = "tetris";
 
@@ -16,12 +15,12 @@ int main(void)
 
     std::shared_ptr<Engine> engine = std::make_shared<Engine>(appName, 480, 640);
 
-    std::shared_ptr<SpriteDemo> spritescene = std::make_shared<SpriteDemo>(engine);
+    auto tetrisscene = std::make_shared<Tetris>(engine);
 
-    engine->enqueueScene(spritescene);
+    engine->enqueueScene(tetrisscene);
     engine->runScene();
 
-    spritescene.reset();
+    tetrisscene.reset();
     engine.reset();
     return 0;
 }

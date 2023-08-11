@@ -6,7 +6,7 @@
 
 #include "Path.h"
 
-SpriteDemo::SpriteDemo(std::shared_ptr<Engine> engine)
+Tetris::Tetris(std::shared_ptr<Engine> engine)
     : Scene(engine)
     , currX(START_X)
     , currY(START_Y)
@@ -33,13 +33,13 @@ SpriteDemo::SpriteDemo(std::shared_ptr<Engine> engine)
 }
 
 
-SpriteDemo::~SpriteDemo()
+Tetris::~Tetris()
 {
     std::cout << __FUNCTION__ << std::endl;
 }
 
 
-void SpriteDemo::onEvent(SDL_Event& event)
+void Tetris::onEvent(SDL_Event& event)
 {
     Scene::onEvent(event);
 
@@ -77,7 +77,7 @@ void SpriteDemo::onEvent(SDL_Event& event)
 }
 
 
-void SpriteDemo::update(float elapsed)
+void Tetris::update(float elapsed)
 {
     if (!gameover) {
         // drop tetrominos
@@ -117,7 +117,7 @@ void SpriteDemo::update(float elapsed)
 }
 
 
-void SpriteDemo::draw()
+void Tetris::draw()
 {
     clearBackground(0, 0, 0, 255);
 
@@ -154,7 +154,7 @@ void SpriteDemo::draw()
 }
 
 
-void SpriteDemo::newTetromino()
+void Tetris::newTetromino()
 {
     currX = START_X;
     currY = START_Y;
@@ -164,7 +164,7 @@ void SpriteDemo::newTetromino()
 }
 
 
-bool SpriteDemo::tetrominoHitsGround()
+bool Tetris::tetrominoHitsGround()
 {
     const Tetromino & t = tetrominos[currTetrominoIdx][currTetrominoDir];
     for (auto b: t) {
@@ -184,7 +184,7 @@ bool SpriteDemo::tetrominoHitsGround()
 }
 
 
-void SpriteDemo::tetrominoToField()
+void Tetris::tetrominoToField()
 {
     const Tetromino & t = tetrominos[currTetrominoIdx][currTetrominoDir];
     for (auto b: t) {
@@ -196,7 +196,7 @@ void SpriteDemo::tetrominoToField()
 }
 
 
-int32_t SpriteDemo::tetrominoWidth()
+int32_t Tetris::tetrominoWidth()
 {
     int maxX = 0;
     const Tetromino & t = tetrominos[currTetrominoIdx][currTetrominoDir];
@@ -207,7 +207,7 @@ int32_t SpriteDemo::tetrominoWidth()
 }
 
 
-int32_t SpriteDemo::checkRows()
+int32_t Tetris::checkRows()
 {
     for (int32_t y = 0; y < FIELD_HEIGHT; y++) {
         bool full = true;
@@ -222,7 +222,7 @@ int32_t SpriteDemo::checkRows()
 }
 
 
-void SpriteDemo::removeRows()
+void Tetris::removeRows()
 {
     if (fullRows.size() > 0) {
         int32_t yy = fullRows.front();
@@ -244,7 +244,7 @@ void SpriteDemo::removeRows()
 }
 
 
-int32_t SpriteDemo::calcScore(int32_t removedRows)
+int32_t Tetris::calcScore(int32_t removedRows)
 {
     if (removedRows >= 4) return removedRows * SCORE_QUAD_MULTIPLIER;
     if (removedRows >= 2) return removedRows * SCORE_DOUBLE_MULTIPLIER;
@@ -252,7 +252,7 @@ int32_t SpriteDemo::calcScore(int32_t removedRows)
 }
 
 
-void SpriteDemo::drawBox(int32_t x, int32_t y, int32_t w, int32_t h)
+void Tetris::drawBox(int32_t x, int32_t y, int32_t w, int32_t h)
 {
     setDrawForegroundColor(255, 255, 192, 255);
     drawRect(x - 1, y - 1, w + 2, h + 2);
@@ -261,7 +261,7 @@ void SpriteDemo::drawBox(int32_t x, int32_t y, int32_t w, int32_t h)
 }
 
 
-void SpriteDemo::drawField()
+void Tetris::drawField()
 {
     // draw preview box
     drawBox(PREVIEW_BOX_OFFSET_X, PREVIEW_BOX_OFFSET_Y, PREVIEW_BOX_WIDTH, PREVIEW_BOX_HEIGHT);
@@ -288,7 +288,7 @@ void SpriteDemo::drawField()
 }
 
 
-void SpriteDemo::drawFullRows()
+void Tetris::drawFullRows()
 {
     setDrawForegroundColor(10, 20, 128, 128);
 
@@ -298,7 +298,7 @@ void SpriteDemo::drawFullRows()
 }
 
 
-void SpriteDemo::drawTetromino(int32_t x, int32_t y, int32_t fx, int32_t fy, const Tetromino &t)
+void Tetris::drawTetromino(int32_t x, int32_t y, int32_t fx, int32_t fy, const Tetromino &t)
 {
     setDrawForegroundColor(192, 192, 192, 255);
 
