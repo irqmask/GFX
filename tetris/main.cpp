@@ -18,7 +18,7 @@ int main(void)
 
     std::shared_ptr<SpriteDemo> spritescene = std::make_shared<SpriteDemo>(engine);
 
-    engine->setNextScene(spritescene);
+    engine->enqueueScene(spritescene);
     engine->runScene();
 
     spritescene.reset();

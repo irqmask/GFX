@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <deque>
 
 #include <SDL.h>
 
@@ -27,6 +28,8 @@ public:
     int32_t windowWidth() const  override;
     int32_t windowHeight() const override;
     void setScale(float scaleX, float scaleY) override;
+    int32_t getScaledWidth() const override;
+    int32_t getScaledHeight() const override;
 
     std::shared_ptr<ImageData> loadImage(const std::string &filename) const override;
     std::shared_ptr<ImageData> copyImage(std::shared_ptr<ImageData> srcImage, const Rect<int32_t>& cutout) const override;
@@ -50,8 +53,8 @@ public:
 
     void run();
     void runScene();
-    void setNextScene(std::shared_ptr<Scene> scene);
-
+    void enqueueScene(std::shared_ptr<Scene> scene);
+    void quit();
 
     virtual void onEvent(SDL_Event& event);
 
@@ -65,12 +68,15 @@ private:
     int32_t h;
     float scaleX;
     float scaleY;
+    int32_t scaledWidth;
+    int32_t scaledHeight;
     float ticks_per_frame = 1000.0f / DESIRED_FPS;
     SDL_Window *window;
     SDL_Renderer* renderer;
-    std::shared_ptr<Scene> current_scene;
-    std::shared_ptr<Scene> next_scene;
-    
+    std::deque<std::shared_ptr<Scene>> sceneStack;
+    std::shared_ptr<Scene> currentScene;
+    bool keepRunning;
+
     void initializeGFX();
     void deinitialzeGFX();    
 };

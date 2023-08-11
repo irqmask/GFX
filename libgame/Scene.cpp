@@ -34,6 +34,18 @@ void Scene::setScale(float scaleX, float scaleY)
 }
 
 
+int32_t Scene::getScaledWidth() const
+{
+    return engine->getScaledWidth();
+}
+
+
+int32_t Scene::getScaledHeight() const
+{
+    return engine->getScaledHeight();
+}
+
+
 std::shared_ptr<ImageData> Scene::loadImage(const std::string& filename) const
 {
     return engine->loadImage(filename);
@@ -134,5 +146,6 @@ void Scene::onEvent(SDL_Event &event)
 {
     if (event.type == SDL_QUIT) {
         keepRunning = false;
+        engine->quit();
     }
 }

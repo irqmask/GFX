@@ -20,6 +20,8 @@ public:
     virtual int32_t windowWidth() const = 0;
     virtual int32_t windowHeight() const = 0;
     virtual void setScale(float scaleX, float scaleY) = 0;
+    virtual int32_t getScaledWidth() const = 0;
+    virtual int32_t getScaledHeight() const = 0;
 
     virtual std::shared_ptr<ImageData> loadImage(const std::string& filename) const = 0;
     virtual std::shared_ptr<ImageData> copyImage(std::shared_ptr<ImageData> srcImage, const Rect<int32_t>& cutout) const = 0;

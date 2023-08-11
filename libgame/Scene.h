@@ -21,6 +21,8 @@ public:
     virtual int32_t windowWidth() const override;
     virtual int32_t windowHeight() const override;
     virtual void setScale(float scaleX, float scaleY) override;
+    int32_t getScaledWidth() const override;
+    int32_t getScaledHeight() const override;
 
     virtual std::shared_ptr<ImageData> loadImage(const std::string& filename) const override;
     virtual std::shared_ptr<ImageData> copyImage(std::shared_ptr<ImageData> srcImage, const Rect<int32_t>& cutout) const override;

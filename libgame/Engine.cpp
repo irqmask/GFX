@@ -20,13 +20,12 @@ Engine::Engine(std::string windowTitle, int32_t windowWidth, int32_t windowHeigh
     , title(windowTitle)
     , w(windowWidth)
     , h(windowHeight)
-    , scaleX(1.0)
-    , scaleY(1.0)
     , window(nullptr)
     , renderer(nullptr)
-    , current_scene(nullptr)
-    , next_scene(nullptr)
+    , currentScene(nullptr)
+    , keepRunning(true)
 {
+    setScale(1.0f, 1.0f);
     SDL_Init(SDL_INIT_EVERYTHING);
     initializeGFX();
 }
@@ -60,7 +59,21 @@ void Engine::setScale(float scaleX, float scaleY)
 {
     this->scaleX = scaleX;
     this->scaleY = scaleY;
+    this->scaledWidth = this->w / this->scaleX;
+    this->scaledHeight = this->h / this->scaleY;
     SDL_RenderSetScale(renderer, this->scaleX, this->scaleY);
+}
+
+
+int32_t Engine::getScaledWidth() const
+{
+    return this->scaledWidth;
+}
+
+
+int32_t Engine::getScaledHeight() const
+{
+    return this->scaledHeight;
 }
 
 
@@ -221,11 +234,16 @@ float Engine::mouseY()
 }
 
 
-void Engine::setNextScene(std::shared_ptr<Scene> scene)
+void Engine::enqueueScene(std::shared_ptr<Scene> scene)
 {
-    this->next_scene = scene;
+    this->sceneStack.push_back(scene);
 }
 
+
+void Engine::quit()
+{
+    this->keepRunning = false;
+}
 
 void Engine::onEvent(SDL_Event& event)
 {
@@ -297,11 +315,11 @@ void Engine::run()
 
 void Engine::runScene()
 {
-    while (this->next_scene != nullptr) {
+    while (this->sceneStack.size() > 0 && keepRunning) {
         // TODO remove? std::cout << "Engine entering next scene" << std::endl;
 
-        this->current_scene = this->next_scene;
-        this->next_scene = nullptr;
+        this->currentScene = this->sceneStack.front();
+        this->sceneStack.pop_front();
 
         bool running = false;
         uint32_t ticks = 0, last_ticks = SDL_GetTicks();
@@ -314,14 +332,14 @@ void Engine::runScene()
                     this->msX = (float)event.motion.x / this->scaleX;
                     this->msY = (float)event.motion.y / this->scaleY;
                 }
-                this->current_scene->onEvent(event);
+                this->currentScene->onEvent(event);
             }
-            this->current_scene->update(this->elapsed);
-            this->current_scene->draw();
+            this->currentScene->update(this->elapsed);
+            this->currentScene->draw();
 
             SDL_RenderPresent(renderer);
 
-            running = this->current_scene->isRunning();
+            running = this->currentScene->isRunning();
 
             frames++;
 
