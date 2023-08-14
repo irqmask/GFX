@@ -23,6 +23,9 @@ public:
     virtual int32_t getScaledWidth() const = 0;
     virtual int32_t getScaledHeight() const = 0;
 
+    virtual void setRenderTarget(std::shared_ptr<ImageData> image) const = 0;
+
+    virtual std::shared_ptr<ImageData> createImage(int32_t width, int32_t height) const = 0;
     virtual std::shared_ptr<ImageData> loadImage(const std::string& filename) const = 0;
     virtual std::shared_ptr<ImageData> copyImage(std::shared_ptr<ImageData> srcImage, const Rect<int32_t>& cutout) const = 0;
 

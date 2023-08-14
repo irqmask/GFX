@@ -52,6 +52,18 @@ int32_t Scene::getScaledHeight() const
 }
 
 
+void Scene::setRenderTarget(std::shared_ptr<ImageData> image) const
+{
+    engine->setRenderTarget(image);
+}
+
+
+std::shared_ptr<ImageData> Scene::createImage(int32_t width, int32_t height) const
+{
+    return engine->createImage(width, height);
+}
+
+
 std::shared_ptr<ImageData> Scene::loadImage(const std::string& filename) const
 {
     return engine->loadImage(filename);

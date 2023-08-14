@@ -77,9 +77,39 @@ int32_t Engine::getScaledHeight() const
 }
 
 
+void Engine::setRenderTarget(std::shared_ptr<ImageData> image) const
+{
+    if (image == nullptr) {
+        SDL_RenderPresent(this->renderer);
+        SDL_SetRenderTarget(this->renderer, NULL);
+    }
+    else {
+        SDL_SetRenderTarget(this->renderer, image->texture);
+    }
+}
+
+
 void Engine::setTitle(std::string title)
 {
     SDL_SetWindowTitle(this->window, title.c_str());
+}
+
+
+std::shared_ptr<ImageData> Engine::createImage(int32_t width, int32_t height) const
+{
+    SDL_Texture *t = SDL_CreateTexture(this->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, width, height);
+    if (t == nullptr) {
+        throw OperationFailed(LOC, "Unable to create texture, error %s !", SDL_GetError());
+    }
+    SDL_SetTextureBlendMode(t, SDL_BLENDMODE_BLEND );
+
+    auto image = std::make_shared<ImageData>(width, height);
+    if (image == nullptr) {
+        SDL_DestroyTexture(t);
+        throw BufferAllocFailed(LOC, "Unable to allocate memory for ImageData!");
+    }
+    image->texture = t;
+    return image;
 }
 
 
@@ -91,13 +121,25 @@ std::shared_ptr<ImageData> Engine::loadImage(const std::string& filename) const
     }
 
     SDL_Texture *t = SDL_CreateTextureFromSurface(this->renderer, s);
+    if (t == nullptr) {
+        SDL_FreeSurface(s);
+        throw OperationFailed(LOC, "Unable to create texture, error %s !", SDL_GetError());
+    }
 
+    //FIXME Is surface still needed after here?
     int w = 0, h = 0;
     int rc = SDL_QueryTexture(t, nullptr, nullptr, &w, &h);
     if (rc != 0) {
+        SDL_DestroyTexture(t);
+        SDL_FreeSurface(s);
         throw OperationFailed(LOC, "Unable to query texture info: SDL Error %d %s", rc, SDL_GetError());
     }
     auto image = std::make_shared<ImageData>(w, h);
+    if (image == nullptr) {
+        SDL_DestroyTexture(t);
+        SDL_FreeSurface(s);
+        throw BufferAllocFailed(LOC, "Unable to allocate memory for ImageData!");
+    }
     image->surface = s;
     image->texture = t;
     return image;
@@ -107,7 +149,23 @@ std::shared_ptr<ImageData> Engine::loadImage(const std::string& filename) const
 std::shared_ptr<ImageData> Engine::copyImage(std::shared_ptr<ImageData> srcImage, const Rect<int32_t>& cutout) const
 {
     SDL_Rect source_rect = { cutout.pos.x, cutout.pos.y, cutout.size.x, cutout.size.y };
+    SDL_Rect dest_rect = { 0, 0, cutout.size.x, cutout.size.y };
 
+    auto image_cutout = createImage(cutout.size.x, cutout.size.y);
+    if (SDL_SetTextureAlphaMod(image_cutout->texture, 255) != 0) {
+        throw OperationFailed(LOC, "SDL_SetTextureAlphaMod returned with error %s", SDL_GetError());
+    }
+    if (SDL_SetRenderTarget(this->renderer, image_cutout->texture) != 0) {
+        throw OperationFailed(LOC, "SDL_SetRenderTarget returned with error %s", SDL_GetError());
+    }
+
+    if (SDL_RenderCopy(this->renderer, srcImage->texture, &source_rect, &dest_rect) != 0) {
+        throw OperationFailed(LOC, "SDL_RenderCopy returned with error %s", SDL_GetError());
+    }
+    if (SDL_SetRenderTarget(this->renderer, nullptr) != 0) {
+        throw OperationFailed(LOC, "SDL_SetRenderTarget returned with error %s", SDL_GetError());
+    }
+/*
     SDL_Surface* s = SDL_CreateRGBSurface(0, cutout.size.x, cutout.size.y,
                                           srcImage->surface->format->BitsPerPixel,
                                           srcImage->surface->format->Rmask,
@@ -115,13 +173,14 @@ std::shared_ptr<ImageData> Engine::copyImage(std::shared_ptr<ImageData> srcImage
                                           srcImage->surface->format->Bmask,
                                           srcImage->surface->format->Amask);
 
+
     SDL_BlitSurface(srcImage->surface, &source_rect, s, nullptr);
     SDL_Texture* t = SDL_CreateTextureFromSurface(renderer, s);
 
     std::shared_ptr<ImageData> image_cutout = std::make_shared<ImageData>(cutout.size.x, cutout.size.y);
     image_cutout->surface = s;
     image_cutout->texture = t;
-
+*/
     return image_cutout;
 }
 
