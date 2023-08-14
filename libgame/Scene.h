@@ -33,6 +33,9 @@ public:
     int32_t getScaledWidth() const override;
     int32_t getScaledHeight() const override;
 
+    virtual void setRenderTarget(std::shared_ptr<ImageData> image) const override;
+
+    virtual std::shared_ptr<ImageData> createImage(int32_t width, int32_t height) const override;
     virtual std::shared_ptr<ImageData> loadImage(const std::string& filename) const override;
     virtual std::shared_ptr<ImageData> copyImage(std::shared_ptr<ImageData> srcImage, const Rect<int32_t>& cutout) const override;
 
