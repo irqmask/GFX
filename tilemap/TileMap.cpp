@@ -57,6 +57,14 @@ void TileMap::setDrawRect(const Rect<int32_t> &r)
     this->drawRect = r;
     this->numDrawTilesX = r.size.x / this->tileWidth;
     this->numDrawTilesY = r.size.y / this->tileHeight;
+    // we need to draw one more if drawrect size is not a true multiple of tile size
+    if (r.size.x % this->tileWidth > 0)
+        this->numDrawTilesX++;
+    if (r.size.y % this->tileHeight > 0)
+        this->numDrawTilesY++;
+    // draw one more to avoid flickering at the sides
+    this->numDrawTilesX++;
+    this->numDrawTilesY++;
 }
 
 
@@ -86,36 +94,7 @@ void TileMap::setTile(const Vec2d<int32_t> & pos, TileMap::tiletype_t tile)
     this->mapData[pos.y * this->width + pos.x] = tile;
 }
 
-/*
-void TileMap::draw()
-{
-    int32_t posX, posY;
-    int32_t camX, camY;
 
-    camX = static_cast<int32_t>(cameraPos.x);
-    camY = static_cast<int32_t>(cameraPos.y);
-
-    float rx = (cameraPos.x - camX) * this->tileWidth;
-    float ry = (cameraPos.y - camY) * this->tileHeight;
-    int32_t ox = rx + 0.5f;
-    int32_t oy = ry + 0.5f;
- 
-    posX = this->drawRect.pos.x;
-    for (int32_t x = camX; x < camX + numDrawTilesX; x++) {
-        posY = this->drawRect.pos.y;
-        for (int32_t y = camY; y < numDrawTilesY; y++) {
-            if (x >= 0 && y >= 0 && x < this->width && y < this->height) {
-                uint32_t tile = this->mapData[y * this->width + x];
-                std::shared_ptr<Frame> frame = tileLookup[tile];
-                if (frame != nullptr)
-                    frame->draw(posX - ox, posY - oy);
-            }
-            posY += this->tileHeight;
-        }
-        posX += this->tileWidth;
-    }
-}
-*/
 void TileMap::draw()
 {
     int32_t camX, camY;
@@ -123,15 +102,15 @@ void TileMap::draw()
     camX = static_cast<int32_t>(cameraPos.x);
     camY = static_cast<int32_t>(cameraPos.y);
 
-    float rx = (cameraPos.x - camX) * this->tileWidth;
-    float ry = (cameraPos.y - camY) * this->tileHeight;
+    int32_t rx = ((float)(cameraPos.x - camX) * (float)this->tileWidth);
+    int32_t ry = ((float)(cameraPos.y - camY) * (float)this->tileHeight);
 
     for (int32_t x = 0; x < numDrawTilesX; x++) {
         for (int32_t y = 0; y < numDrawTilesY; y++) {
             int32_t tx = x + camX;
             int32_t ty = y + camY;
             if (tx >= 0 && ty >= 0 && tx < this->width && ty < this->height) {
-                uint32_t tile = this->mapData[ty * this->width + tx];
+                tiletype_t tile = this->mapData[ty * this->width + tx];
                 std::shared_ptr<Frame> frame = tileLookup[tile];
                 if (frame != nullptr)
                     engine->drawFrame(x * tileWidth - rx, y * tileHeight - ry, frame);
@@ -171,7 +150,7 @@ bool TileMap::isPosInMap(Vec2d<float> pos)
 }
 
 
-Vec2d<int32_t> TileMap::getDrawPos(Vec2d<float> pos)
+Vec2d<int32_t> TileMap::getDrawPos(Vec2d<float> pos) const
 {
     pos.x -= cameraPos.x;
     pos.y -= cameraPos.y;
@@ -189,6 +168,11 @@ Vec2d<int32_t> TileMap::getDrawPos(Vec2d<float> pos)
     return vi;
 }
 
+
+Vec2d<float> TileMap::getCameraPos() const
+{
+    return cameraPos;
+}
 
 void TileMap::setCameraPos(Vec2d<float> pos)
 {
