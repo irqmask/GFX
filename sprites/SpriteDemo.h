@@ -17,4 +17,5 @@ public:
 
 private:
     std::shared_ptr<Sprite> sprite;
+    std::shared_ptr<ImageData> imgFrameSet;
 };
