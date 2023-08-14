@@ -240,6 +240,17 @@ void Engine::enqueueScene(std::shared_ptr<Scene> scene)
 }
 
 
+void Engine::setSceneData(std::shared_ptr<SceneData> data)
+{
+    this->sceneData = data;
+}
+
+std::shared_ptr<SceneData> Engine::getSceneData() const
+{
+    return this->sceneData;
+}
+
+
 void Engine::quit()
 {
     this->keepRunning = false;
