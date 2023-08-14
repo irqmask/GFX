@@ -54,6 +54,8 @@ public:
     void run();
     void runScene();
     void enqueueScene(std::shared_ptr<Scene> scene);
+    void setSceneData(std::shared_ptr<SceneData> data);
+    std::shared_ptr<SceneData> getSceneData() const;
     void quit();
 
     virtual void onEvent(SDL_Event& event);
@@ -74,6 +76,7 @@ private:
     SDL_Window *window;
     SDL_Renderer* renderer;
     std::deque<std::shared_ptr<Scene>> sceneStack;
+    std::shared_ptr<SceneData> sceneData;
     std::shared_ptr<Scene> currentScene;
     bool keepRunning;
 

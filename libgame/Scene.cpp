@@ -16,6 +16,12 @@ Scene::~Scene()
 }
 
 
+std::shared_ptr<SceneData> Scene::getData() const
+{
+    return engine->getSceneData();
+}
+
+
 int32_t Scene::windowWidth() const
 {
     return engine->windowWidth();

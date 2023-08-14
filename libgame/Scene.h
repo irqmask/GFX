@@ -7,6 +7,15 @@
 
 class Engine;
 
+/// Data class for storing data global to all scenes.
+class SceneData
+{
+public:
+    SceneData() {}
+    virtual ~SceneData() {}
+};
+
+
 /// Use a scene to implement difference, well, scenes, in your application.
 /// For example, a game starts with an intro scene, followed by the actual level and then an outro scene.
 /// The SceneManager will automatically play-back all scenes in the implemented order.
@@ -46,6 +55,7 @@ public:
 
     bool isRunning() { return keepRunning; }
     void endScene() { keepRunning = false; }
+    std::shared_ptr<SceneData> getData() const;
 
     virtual void onEvent(SDL_Event& event);
 
