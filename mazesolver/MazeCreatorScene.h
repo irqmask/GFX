@@ -5,6 +5,8 @@
 
 #include "Scene.h"
 
+class MazeData;
+
 class MazeCreatorScene : public Scene
 {
 public:
@@ -24,14 +26,14 @@ private:
         CELL_VISITED        = 0x10
     };
 
-    static constexpr int32_t CELL_SIZE = 20;
+    static constexpr int32_t CELL_SIZE = 15;
 
     float interval;
     bool drawIt, finished;
     int32_t rows, columns;
-    Vec2I32 startPos, endPos;
     std::stack<Vec2I32> places;
-    uint8_t *maze;
+
+    std::shared_ptr<MazeData> data;
 
     int32_t index(const Vec2I32 &coord) const;
     bool isVisited(const Vec2I32 &coord) const;
@@ -39,4 +41,5 @@ private:
     void tearDownWalls(const Vec2I32 &from, const Vec2I32 &to);
     std::vector<Vec2I32> findUnvisitedNeigbors(const Vec2I32 &coord) const;
     void restart();
+    void convertToTilemap();
 };
