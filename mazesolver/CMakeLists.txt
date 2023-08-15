@@ -3,7 +3,7 @@ project(mazesolver)
 cmake_minimum_required(VERSION 3.10)
 
 
-set(CMAKE_CXX_STANDARD 11) 
+set(CMAKE_CXX_STANDARD 17)
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
@@ -11,6 +11,7 @@ file(GLOB SDL_DLLS ${SDL2_LIBRARY_DIR}/*.dll)
 file(GLOB SDL_IMAGE_DLLS ${SDL2_IMAGE_LIBRARY_DIR}/*.dll)
       
 set(PRJ_SOURCES
+    MazeData.h
     MazeCreatorScene.h
     MazeSolverScene.h
 
