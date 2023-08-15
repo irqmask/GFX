@@ -25,6 +25,7 @@ Engine::Engine(std::string windowTitle, int32_t windowWidth, int32_t windowHeigh
     , currentScene(nullptr)
     , keepRunning(true)
 {
+    memset(keyPressed, 0, sizeof(keyPressed));
     setScale(1.0f, 1.0f);
     SDL_Init(SDL_INIT_EVERYTHING);
     initializeGFX();
@@ -281,13 +282,22 @@ void Engine::drawSprite(std::shared_ptr<Sprite> sprite)
 }
 
 
-float Engine::mouseX()
+bool Engine::keyIsPressed(int32_t key) const
+{
+    if (key < KEY_LAST) {
+        return keyPressed[key];
+    }
+    return false;
+}
+
+
+float Engine::mouseX() const
 {
     return msX;
 }
 
 
-float Engine::mouseY()
+float Engine::mouseY() const
 {
     return msY;
 }
@@ -304,6 +314,7 @@ void Engine::setSceneData(std::shared_ptr<SceneData> data)
     this->sceneData = data;
 }
 
+
 std::shared_ptr<SceneData> Engine::getSceneData() const
 {
     return this->sceneData;
@@ -314,6 +325,7 @@ void Engine::quit()
 {
     this->keepRunning = false;
 }
+
 
 void Engine::onEvent(SDL_Event& event)
 {
@@ -344,10 +356,8 @@ void Engine::run()
             if (event.type == SDL_QUIT) {
                 running = false;
             }
-            if (event.type == SDL_MOUSEMOTION) {
-                this->msX = (float)event.motion.x / this->scaleX;
-                this->msY = (float)event.motion.y / this->scaleY;
-            }
+            processKeyEvents(event);
+            processMouseEvents(event);
             this->onEvent(event);
         }
         this->update(this->elapsed);
@@ -398,10 +408,8 @@ void Engine::runScene()
         do {
             SDL_Event event;
             while (SDL_PollEvent(&event)) {
-                if (event.type == SDL_MOUSEMOTION) {
-                    this->msX = (float)event.motion.x / this->scaleX;
-                    this->msY = (float)event.motion.y / this->scaleY;
-                }
+                processKeyEvents(event);
+                processMouseEvents(event);
                 this->currentScene->onEvent(event);
             }
             this->currentScene->update(this->elapsed);
@@ -474,4 +482,28 @@ void Engine::deinitialzeGFX()
     }
     IMG_Quit();
     SDL_Quit();
+}
+
+
+void Engine::processKeyEvents(SDL_Event &event)
+{
+    if (event.key.type == SDL_KEYDOWN) {
+        if ((KeyCode)event.key.keysym.scancode < KEY_LAST) {
+            keyPressed[event.key.keysym.scancode] = true;
+        }
+    }
+    else if (event.key.type == SDL_KEYUP) {
+        if ((KeyCode)event.key.keysym.scancode < KEY_LAST) {
+            keyPressed[event.key.keysym.scancode] = false;
+        }
+    }
+}
+
+
+void Engine::processMouseEvents(SDL_Event &event)
+{
+    if (event.type == SDL_MOUSEMOTION) {
+        this->msX = (float)event.motion.x / this->scaleX;
+        this->msY = (float)event.motion.y / this->scaleY;
+    }
 }

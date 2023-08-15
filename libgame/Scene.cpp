@@ -142,13 +142,19 @@ void Scene::drawSprite(std::shared_ptr<Sprite> sprite)
 }
 
 
-float Scene::mouseX()
+bool Scene::keyIsPressed(int32_t key) const
+{
+    return engine->keyIsPressed(key);
+}
+
+
+float Scene::mouseX() const
 {
     return engine->mouseX();
 }
 
 
-float Scene::mouseY()
+float Scene::mouseY() const
 {
     return engine->mouseY();
 }
