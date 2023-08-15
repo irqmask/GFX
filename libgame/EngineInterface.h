@@ -41,8 +41,9 @@ public:
     virtual void drawFrame(int32_t x, int32_t y, std::shared_ptr<Frame> frame) = 0;
     virtual void drawSprite(std::shared_ptr<Sprite> sprite) = 0;
 
-    virtual float mouseX() = 0;
-    virtual float mouseY() = 0;
+    virtual bool keyIsPressed(int32_t key) const = 0;
+    virtual float mouseX() const = 0;
+    virtual float mouseY() const = 0;
 
     virtual void setTitle(std::string title) = 0;   
 };

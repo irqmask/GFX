@@ -51,8 +51,9 @@ public:
     virtual void drawFrame(int32_t x, int32_t y, std::shared_ptr<Frame> frame) override;
     virtual void drawSprite(std::shared_ptr<Sprite> sprite) override;
 
-    virtual float mouseX() override;
-    virtual float mouseY() override;
+    virtual bool keyIsPressed(int32_t key) const override;
+    virtual float mouseX() const override;
+    virtual float mouseY() const override;
 
     virtual void setTitle(std::string title) override;
 
@@ -60,6 +61,10 @@ public:
     void endScene() { keepRunning = false; }
     std::shared_ptr<SceneData> getData() const;
 
+    /// The onEvent() is called in a loop until all events since last call have bee processed
+    /// Unless the other two functions update() and draw() which will be called only one per
+    /// main-loop.
+    /// For scenes you must call Scene::onEvent() also in your event handling function.
     virtual void onEvent(SDL_Event& event);
 
     virtual void update(float elapsed) = 0;
