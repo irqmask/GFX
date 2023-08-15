@@ -150,6 +150,28 @@ bool TileMap::isPosInMap(Vec2d<float> pos)
 }
 
 
+Vec2d<int32_t> TileMap::getDrawPos(Vec2d<int32_t> pos) const
+{
+    float posX = pos.x;
+    float posY = pos.y;
+
+    posX -= cameraPos.x;
+    posY -= cameraPos.y;
+
+    posX *= this->tileWidth;
+    posY *= this->tileHeight;
+
+    posX += this->drawRect.pos.x;
+    posY += this->drawRect.pos.y;
+    posX += 0.5f;
+    posY += 0.5f;
+    Vec2d<int32_t> vi;
+    vi.x = static_cast<int32_t>(posX);
+    vi.y = static_cast<int32_t>(posY);
+    return vi;
+}
+
+
 Vec2d<int32_t> TileMap::getDrawPos(Vec2d<float> pos) const
 {
     pos.x -= cameraPos.x;
