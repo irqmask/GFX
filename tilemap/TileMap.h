@@ -51,6 +51,9 @@ public:
     bool isPosInMap(Vec2d<float> pos);
 
     /// Get draw position from map position
+    Vec2d<int32_t> getDrawPos(Vec2d<int32_t> pos) const;
+
+    /// Get draw position from map position
     Vec2d<int32_t> getDrawPos(Vec2d<float> pos) const;
 
     /// @returns camera position
