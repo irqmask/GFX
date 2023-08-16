@@ -35,34 +35,32 @@ MazeSolverScene::MazeSolverScene(std::shared_ptr<Engine> engine)
     font = std::shared_ptr<BitmapFont>(new BitmapFont(assetPath.plusFilename("font.png"), 9, 16, 20, 128));
 
     nodes = new Node[data->tmRows * data->tmCols];
-    for (int32_t y=0; y<data->tmRows; y++) {
-        for (int32_t x=0; x<data->tmCols; x++) {
-            auto node = &nodes[y * data->tmCols + x];
-            node->globalGoal = INFINITY;
-            node->localGoal = INFINITY;
-            node->parent = nullptr;
-            node->x = x;
-            node->y = y;
-            node->visited = false;
-            node->neighbors.clear();
 
-            fillNeighbors(x, y);
-        }
-    }
-    currX = data->mapStartPos.x;
-    currY = data->mapStartPos.y;
-    auto startNode = &nodes[currY * data->tmCols + currX];
-    startNode->globalGoal = calcHeuristics(currX, currY);
-    startNode->localGoal = 0.0f;
-    nodesToTest.push_back(&nodes[currY * data->tmCols + currX]);
+    startFindPath(data->mapStartPos, data->mapEndPos);
 
-    endNode = &nodes[data->mapEndPos.y * data->tmCols + data->mapEndPos.x];
 }
 
 
 MazeSolverScene::~MazeSolverScene()
 {
     std::cout << __FUNCTION__ << std::endl;
+    if (nodes != nullptr)
+        delete[] nodes;
+}
+
+
+void MazeSolverScene::onEvent(SDL_Event& event)
+{
+    Scene::onEvent(event);
+    if (event.key.state == SDL_RELEASED && event.key.keysym.scancode == SDL_SCANCODE_F5) {
+        data->mapStartPos = Vec2I32(rand() % data->columns, rand() % data->rows);
+        data->mapStartPos.x = data->mapStartPos.x * 2 + 1;
+        data->mapStartPos.y = data->mapStartPos.y * 2 + 1;
+        data->mapEndPos = Vec2I32(rand() % data->columns, rand() % data->rows);
+        data->mapEndPos.x = data->mapEndPos.x * 2 + 1;
+        data->mapEndPos.y = data->mapEndPos.y * 2 + 1;
+        startFindPath(data->mapStartPos, data->mapEndPos);
+    }
 }
 
 
@@ -90,6 +88,11 @@ void MazeSolverScene::draw()
 
     tilemap->draw();
 
+    if (nodesToTest.size() > 0)
+        drawPath(nodesToTest.front());
+    else if (endNode != nullptr)
+        drawPath(endNode);
+
     // draw start position
     setDrawForegroundColor(0, 255, 0, 196);
     auto startPos = tilemap->getDrawPos(data->mapStartPos);
@@ -100,15 +103,6 @@ void MazeSolverScene::draw()
     auto endPos = tilemap->getDrawPos(data->mapEndPos);
     drawFilledRect(endPos.x + 2, endPos.y + 2, tileWidth - 4, tileHeight - 4);
 
-    // draw current position
-    /*setDrawForegroundColor(255, 255, 0, 196);
-    auto currPos = tilemap->getDrawPos(Vec2I32(currX, currY));
-    drawFilledCircle(currPos.x + tileWidth/2, currPos.y + tileHeight/2, tileWidth/2 - 4);*/
-
-    if (nodesToTest.size() > 0)
-        drawPath(nodesToTest.front());
-    else if (endNode != nullptr)
-        drawPath(endNode);
     setDrawForegroundColor(32, 32, 64, 64);
     drawFilledRect(5, 5, 210, 40);
 
@@ -175,6 +169,34 @@ float MazeSolverScene::calcHeuristics(int32_t x, int32_t y)
     float diffX = x - data->endPos.x;
     float diffY = y - data->endPos.y;
     return sqrtf(diffX * diffX + diffY * diffY);
+}
+
+
+void MazeSolverScene::startFindPath(Vec2I32 start, Vec2I32 end)
+{
+    for (int32_t y=0; y<data->tmRows; y++) {
+        for (int32_t x=0; x<data->tmCols; x++) {
+            auto node = &nodes[y * data->tmCols + x];
+            node->globalGoal = INFINITY;
+            node->localGoal = INFINITY;
+            node->parent = nullptr;
+            node->x = x;
+            node->y = y;
+            node->visited = false;
+            node->neighbors.clear();
+
+            fillNeighbors(x, y);
+        }
+    }
+
+    currX = start.x;
+    currY = start.y;
+    auto startNode = &nodes[currY * data->tmCols + currX];
+    startNode->globalGoal = calcHeuristics(currX, currY);
+    startNode->localGoal = 0.0f;
+    nodesToTest.push_back(&nodes[currY * data->tmCols + currX]);
+
+    endNode = &nodes[end.y * data->tmCols + end.x];
 }
 
 

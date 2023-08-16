@@ -30,7 +30,6 @@ private:
 
     float interval;
     bool drawIt, finished;
-    int32_t rows, columns;
     std::stack<Vec2I32> places;
 
     std::shared_ptr<MazeData> data;
