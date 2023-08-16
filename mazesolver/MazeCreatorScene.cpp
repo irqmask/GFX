@@ -20,12 +20,14 @@ MazeCreatorScene::MazeCreatorScene(std::shared_ptr<Engine> engine)
     std::cout << __FUNCTION__ << std::endl;    
     srand((int)std::time(0));
 
-    rows = this->getScaledHeight() / CELL_SIZE;
-    columns = this->getScaledWidth() / CELL_SIZE;
+    int32_t rows = this->getScaledHeight() / CELL_SIZE;
+    int32_t columns = this->getScaledWidth() / CELL_SIZE;
     std::cout << "Generating a " << columns << " x " << rows << " maze." << std::endl;
 
     data = std::dynamic_pointer_cast<MazeData>(getData());
     data->maze = new uint8_t[rows * columns];
+    data->rows = rows;
+    data->columns = columns;
     memset(data->maze,
            CELL_WALL_TOP | CELL_WALL_RIGHT | CELL_WALL_BOTTOM | CELL_WALL_LEFT,
            rows * columns);
@@ -93,15 +95,15 @@ void MazeCreatorScene::draw()
 
     clearBackground(32, 64, 128, 0);
 
-    for (int32_t y = 0; y < rows; y++) {
-        for (int32_t x = 0; x < columns; x++) {
+    for (int32_t y = 0; y < data->rows; y++) {
+        for (int32_t x = 0; x < data->columns; x++) {
 
             setDrawForegroundColor(255, 255, 255, 255);
             if (isVisited(Vec2I32(x, y)))
                 drawFilledRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 
             setDrawForegroundColor(0, 0, 0, 255);
-            uint8_t walls = data->maze[y * columns + x];
+            uint8_t walls = data->maze[y * data->columns + x];
             if (walls & CELL_WALL_TOP)
                 drawLine(x * CELL_SIZE, y * CELL_SIZE, (x + 1) * CELL_SIZE - 1, y * CELL_SIZE);
             if (walls & CELL_WALL_RIGHT)
@@ -138,28 +140,28 @@ std::vector<Vec2I32> MazeCreatorScene::findUnvisitedNeigbors(const Vec2I32 &coor
     std::vector<Vec2I32> v;
 
     n = Vec2I32(coord.x, coord.y - 1);
-    if (n.x >= 0 && n.x < columns && n.y >= 0 && n.y < rows) {
+    if (n.x >= 0 && n.x < data->columns && n.y >= 0 && n.y < data->rows) {
         if (!isVisited(n)) {
             v.push_back(n);
         }
     }
 
     n = Vec2I32(coord.x + 1, coord.y);
-    if (n.x >= 0 && n.x < columns && n.y >= 0 && n.y < rows) {
+    if (n.x >= 0 && n.x < data->columns && n.y >= 0 && n.y < data->rows) {
         if (!isVisited(n)) {
             v.push_back(n);
         }
     }
 
     n = Vec2I32(coord.x, coord.y + 1);
-    if (n.x >= 0 && n.x < columns && n.y >= 0 && n.y < rows) {
+    if (n.x >= 0 && n.x < data->columns && n.y >= 0 && n.y < data->rows) {
         if (!isVisited(n)) {
             v.push_back(n);
         }
     }
 
     n = Vec2I32(coord.x - 1, coord.y);
-    if (n.x >= 0 && n.x < columns && n.y >= 0 && n.y < rows) {
+    if (n.x >= 0 && n.x < data->columns && n.y >= 0 && n.y < data->rows) {
         if (!isVisited(n)) {
             v.push_back(n);
         }
@@ -171,8 +173,8 @@ std::vector<Vec2I32> MazeCreatorScene::findUnvisitedNeigbors(const Vec2I32 &coor
 
 int32_t MazeCreatorScene::index(const Vec2I32 &coord) const
 {
-    if (coord.x >= 0 && coord.x < columns && coord.y >= 0 && coord.y < rows) {
-        return coord.y * columns + coord.x;
+    if (coord.x >= 0 && coord.x < data->columns && coord.y >= 0 && coord.y < data->rows) {
+        return coord.y * data->columns + coord.x;
     }
     return -1;
 }
@@ -180,8 +182,8 @@ int32_t MazeCreatorScene::index(const Vec2I32 &coord) const
 
 bool MazeCreatorScene::isVisited(const Vec2I32 &coord) const
 {
-    if (coord.x >= 0 && coord.x < columns && coord.y >= 0 && coord.y < rows) {
-        if ((data->maze[coord.y * columns + coord.x] & CELL_VISITED) != 0) {
+    if (coord.x >= 0 && coord.x < data->columns && coord.y >= 0 && coord.y < data->rows) {
+        if ((data->maze[coord.y * data->columns + coord.x] & CELL_VISITED) != 0) {
             return true;
         }
     }
@@ -221,9 +223,9 @@ void MazeCreatorScene::tearDownWalls(const Vec2I32 &from, const Vec2I32 &to)
 
 void MazeCreatorScene::visit(const Vec2I32 &coord)
 {
-    if (coord.x >= 0 && coord.x < columns && coord.y >= 0 && coord.y < rows) {
+    if (coord.x >= 0 && coord.x < data->columns && coord.y >= 0 && coord.y < data->rows) {
 
-        data->maze[coord.y * columns + coord.x] |= CELL_VISITED;
+        data->maze[coord.y * data->columns + coord.x] |= CELL_VISITED;
         if (places.size()) tearDownWalls(places.top(), coord);
         places.push(coord);
         data->endPos = coord;
@@ -235,11 +237,11 @@ void MazeCreatorScene::restart()
 {
     memset(data->maze,
            CELL_WALL_TOP | CELL_WALL_RIGHT | CELL_WALL_BOTTOM | CELL_WALL_LEFT,
-           rows * columns);
+           data->rows * data->columns);
     while (places.size()) {
         places.pop();
     }
-    data->startPos = Vec2I32(rand() % columns, rand() % rows);
+    data->startPos = Vec2I32(rand() % data->columns, rand() % data->rows);
     data->endPos = Vec2I32(-1, -1);
     visit(data->startPos); // set starting point
 }
@@ -247,8 +249,8 @@ void MazeCreatorScene::restart()
 
 void MazeCreatorScene::convertToTilemap()
 {
-    data->tmRows = rows * 2 + 1;
-    data->tmCols = columns * 2 + 1;
+    data->tmRows = data->rows * 2 + 1;
+    data->tmCols = data->columns * 2 + 1;
 
     // tilemap 0 free walking space, 128 wall
     data->mazemap = new TileMap::tiletype_t[data->tmRows * data->tmCols];
@@ -256,29 +258,28 @@ void MazeCreatorScene::convertToTilemap()
         data->mazemap[idx] = 1;
     }
 
-    for (int32_t y = 0; y < rows; y++) {
-        for (int32_t x = 0; x < columns; x++) {
+    for (int32_t y = 0; y < data->rows; y++) {
+        for (int32_t x = 0; x < data->columns; x++) {
             int32_t tmx = x * 2 + 1;
             int32_t tmy = y * 2 + 1;
 
             data->mazemap[tmy * data->tmCols + tmx] = 0;
-            if ((data->maze[y * columns + x] & CELL_WALL_TOP) == 0) {
+            if ((data->maze[y * data->columns + x] & CELL_WALL_TOP) == 0) {
                 data->mazemap[(tmy - 1) * data->tmCols + tmx] = 0;
             }
-            if ((data->maze[y * columns + x] & CELL_WALL_RIGHT) == 0) {
+            if ((data->maze[y * data->columns + x] & CELL_WALL_RIGHT) == 0) {
                 data->mazemap[tmy * data->tmCols + (tmx + 1)] = 0;
             }
-            if ((data->maze[y * columns + x] & CELL_WALL_BOTTOM) == 0) {
+            if ((data->maze[y * data->columns + x] & CELL_WALL_BOTTOM) == 0) {
                 data->mazemap[(tmy + 1) * data->tmCols + tmx] = 0;
             }
-            if ((data->maze[y * columns + x] & CELL_WALL_LEFT) == 0) {
+            if ((data->maze[y * data->columns + x] & CELL_WALL_LEFT) == 0) {
                 data->mazemap[tmy * data->tmCols + (tmx - 1)] = 0;
             }
         }
     }
     data->mapStartPos.x = data->startPos.x * 2 + 1;
     data->mapStartPos.y = data->startPos.y * 2 + 1;
-    data->endPos = Vec2I32(rand() % columns, rand() % rows);
     data->mapEndPos.x = data->endPos.x * 2 + 1;
     data->mapEndPos.y = data->endPos.y * 2 + 1;
 }

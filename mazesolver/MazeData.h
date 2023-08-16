@@ -16,7 +16,9 @@ public:
     Vec2I32 mapStartPos;
     Vec2I32 mapEndPos;
     uint8_t *maze;
-    int32_t tmRows;
-    int32_t tmCols;
+    int32_t rows;   // row count without walls
+    int32_t columns;// column count without walls
+    int32_t tmRows; // row count of map (with walls)
+    int32_t tmCols; // column count of map (with walls)
     TileMap::tiletype_t *mazemap;
 };

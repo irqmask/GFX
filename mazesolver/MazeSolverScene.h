@@ -17,6 +17,7 @@ public:
     MazeSolverScene(std::shared_ptr<Engine> engine);
     virtual ~MazeSolverScene();
 
+    virtual void onEvent(SDL_Event& event) override;
     virtual void update(float elapsed) override;
     virtual void draw() override;
 
@@ -51,6 +52,7 @@ private:
     void fillNeighbors(int32_t x, int32_t y);
     float calcHeuristics(int32_t x, int32_t y);
 
+    void startFindPath(Vec2I32 start, Vec2I32 end);
 
     /// @returns true, if it needs to be executed again.
     bool doFindPath();
