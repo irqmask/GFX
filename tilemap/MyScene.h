@@ -21,13 +21,20 @@ public:
 private:
     static constexpr uint32_t levelWidth = 30;
     static constexpr uint32_t levelHeight = 30;
+
     static TileMap::tiletype_t level0[levelWidth * levelHeight];
+    static TileMap::tiletype_t level1[levelWidth * levelHeight];
 
     static constexpr int32_t tileWidth  = 30;
     static constexpr int32_t tileHeight = 30;
 
     static constexpr float cameraSpeed = 10.0f;
 
+private:
+    void mapFromString(TileMap::tiletype_t map[], const std::string &str);
+    TileMap::tiletype_t evalTileType(const std::string &str, char primary, char secondary, int32_t x, int32_t y, const std::array<TileMap::tiletype_t,18> &tiletypes);
+
+private:
     std::shared_ptr<TileMap> tilemap;
 
     int32_t mx, my;
