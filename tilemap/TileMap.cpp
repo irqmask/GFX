@@ -39,11 +39,16 @@ TileMap::~TileMap()
 }
 
 
-void TileMap::load(uint32_t *map, int32_t width, int32_t heigth)
+void TileMap::load(uint32_t *map, int32_t width, int32_t heigth, int32_t indexOffset)
 {
     this->width = width;
     this->height = heigth;
     this->mapData = map;
+    if (indexOffset) {
+        for (size_t idx=0; idx<width*height; idx++) {
+            mapData[idx] += indexOffset;
+        }
+    }
 }
 
 

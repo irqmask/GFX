@@ -8,6 +8,24 @@ public:
     Vec2d(T x, T y) : x(x), y(y) {};
     T x;
     T y;
+
+    Vec2d<T>& operator+=(const Vec2d<T>& other) {
+        this->x += other.x;
+        this->y += other.y;
+        return *this;
+    }
+
+    Vec2d<T>& operator-=(const Vec2d<T>& other) {
+        this->x -= other.x;
+        this->y -= other.y;
+        return *this;
+    }
+
+    Vec2d<T>& operator*=(float val) {
+        this->x *= val;
+        this->y *= val;
+        return *this;
+    }
 };
 
 

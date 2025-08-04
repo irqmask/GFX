@@ -24,7 +24,7 @@ public:
             int32_t tile_width, int32_t tile_height);
     ~TileMap();
 
-    void load(tiletype_t *map, int32_t width, int32_t heigth);
+    void load(tiletype_t *map, int32_t width, int32_t heigth, int32_t indexOffset=0);
     
     /// set position and size of Tilemap on Screen
     void setDrawRect(const Rect<int32_t> & r);
@@ -53,7 +53,7 @@ public:
     /// Get draw position from map position
     Vec2d<int32_t> getDrawPos(Vec2d<float> pos);
 
-    /// set camra position. The camera position defines the top left tile to draw
+    /// set camera position. The camera position defines the top left tile to draw
     /// @param[in]  pos     Camera position
     void setCameraPos(Vec2d<float> pos);
 

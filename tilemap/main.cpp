@@ -16,7 +16,7 @@ int main(void)
 
     std::shared_ptr<Engine> engine = std::unique_ptr<Engine>(new Engine(appName, 640, 480));
     engine->setScale(2.0, 2.0);
-    std::shared_ptr<SpriteDemo> spritescene = std::make_shared<SpriteDemo>(engine);
+    std::shared_ptr<TilemapDemo> spritescene = std::make_shared<TilemapDemo>(engine);
 
     engine->enqueueScene(spritescene);
     engine->runScene();
